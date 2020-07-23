@@ -2,7 +2,7 @@ library(shiny)
 library(shinydashboard)
 library(DT)
 
-ui_dss <- dashboardPage(skin = "blue",
+ui_dss <- dashboardPage(skin = "purple",
   dashboardHeader(title = "Sex estimation",
                   titleWidth = 325),
 
@@ -39,6 +39,21 @@ ui_dss <- dashboardPage(skin = "blue",
   ## 2. Tabs ##
   #############
   dashboardBody(
+    tags$style(HTML("
+      .progress-bar{
+        background-color:#605ca8;
+      }
+      .box.box-info{
+        border-top-color:#605ca8;
+      }
+      .box.box-solid.box-info > .box-header{
+        background:#605ca8;
+        background-color:#605ca8;
+      }
+      .box.box-solid.box-info{
+        border:#666666;
+      }")),
+
     tabItems(
       ## 2.1. Tab for data import:
       tabItem(tabName = "tab_data",
@@ -61,7 +76,7 @@ ui_dss <- dashboardPage(skin = "blue",
                                 label = "Decimal point",
                                 choices = c("Comma (,)" = ",",
                                             "Dot (.)" = "."),
-                                selected = "Dot (.)",
+                                selected = ".",
                                 multiple = FALSE),
                     textInput(inputId = "text_NA",
                               label = "Indicator for missing values",
@@ -136,7 +151,11 @@ ui_dss <- dashboardPage(skin = "blue",
                           label = "Select one target individual whose sex will be estimated",
                           width = 350,
                           choices = c("No data file loaded"),
-                          multiple = FALSE)
+                          multiple = FALSE),
+              h4("Values of the selected individual"),
+              tableOutput(outputId = "target_indiv_values"),
+              h4("Overview"),
+              textOutput(outputId = "text_description_target"),
               ),
       ## 2.3. Tab for data exploration and analysis settings:
       tabItem(tabName = "tab_settings",

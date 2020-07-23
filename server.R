@@ -32,12 +32,42 @@ dss_server <- function(input, output, session) {
     ## store data into the app environment:
     assign("dat", value = dat, envir = dss_env)
   })
-}
 
 ########################################
 ### 2. Display the target individual ###
 ########################################
+  ## Reactive expression for the whole dataset:
+  dat <- reactive({
+    if (input$button_load_data > 0 & exists("dat", envir = dss_env)) {
+      get("dat", envir = dss_env)
+    } else {
+      return()
+    }
+  })
 
+  ## Reactive expression for the TBD individual only:
+  target <- reactive({
+    return(dat()[input$select_target_indiv, ])
+  })
+
+  ## Render and display the selected target individual:
+  output$target_indiv_values <- renderTable(target(),
+                                            rownames = TRUE)
+
+  ## Render a small text describing the target individual:
+  output$text_description_target <- renderText({
+    if (! is.null(target())) {
+      paste("The individual",
+            input$select_target_indiv,
+            "has",
+            ncol(target()[, !is.na(target()[1, ])]),
+            "non-missing values out of the",
+            ncol(dat()),
+            "variables included in the dataset.")
+    }
+  })
+
+}
 
 ### Local variables:
 ### ess-indent-level:2
