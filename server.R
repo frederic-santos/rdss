@@ -26,8 +26,11 @@ dss_server <- function(input, output, session) {
                         choices = rownames(tbd))
       ## Return a message to say OK:
       output$text_data_ok <- renderText("Data file loaded successfully!")
-      ## TODO : update des critères de l'onglet 3 après import du fichier :
-      ## - max du numericInput
+      ## TODO : à améliorer (et sans doute déplacer) :
+      ## Update widget for minimal number of indiv:
+      updateNumericInput(session,
+                         inputId = "nb_min_indiv",
+                         max = nrow(dat) - nrow(tbd))
     } else { # the user provided no data file
       showModal(modalDialog(title = "Error",
                             "Please select a file on your computer.",
@@ -81,15 +84,27 @@ dss_server <- function(input, output, session) {
     return(dat()[row_ref, col_ref])
   })
 
+  ## Current (filtered) reference sample:
+  current <- reactiveValues(
+    df = NULL # fake init to NULL...
+  )
+  observeEvent(target(), {
+    current$df <- ref() # ... and instantly set to ref() after data loading
+  })
+  observeEvent(input$perc_md_variables, {
+    current$df <- current$df[1:4, 1:4] # /!\ !!!!!!!!!!! TEST ONLY. évidemment à modifier !!!!!!!!!!!!!
+  })
+  
+  ## Display reference sample:
   output$DT_ref_sample <- DT::renderDataTable(
-    DT::datatable(ref(), options = list(pageLength = 5))
+    DT::datatable(current$df, options = list(pageLength = 5))
     )
 
   ## (Text) summary for the reference sample:
   output$text_summary_ref <- renderText({
     if (! is.null(target())) {
-      fem <- ref()[ref()[, input$name_sex_column] == input$indic_females, ]
-      mal <- ref()[ref()[, input$name_sex_column] == input$indic_males, ]
+      fem <- current$df[current$df[, input$name_sex_column] == input$indic_females, ]
+      mal <- current$df[current$df[, input$name_sex_column] == input$indic_males, ]
       paste("The reference sample has currently ",
             nrow(fem),
             " female individuals (",
@@ -107,7 +122,7 @@ dss_server <- function(input, output, session) {
   output$plot_md_pattern <- renderPlot({
     if (! is.null(target())) {
       par(mar = c(1, 1, 1, 1))
-      mice::md.pattern(x = ref(), plot = TRUE)
+      mice::md.pattern(x = current$df, plot = TRUE)
     }
   })
 }
