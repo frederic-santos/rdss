@@ -1,3 +1,4 @@
+library(mice)
 library(shiny)
 library(shinydashboard)
 library(DT)
@@ -23,9 +24,9 @@ ui_dss <- dashboardPage(skin = "purple",
                 menuItem("2. Select the target individual",
                          icon = icon("bullseye"),
                          tabName = "tab_target_indiv"),
-                menuItem("3. Data exploration and analysis settings",
+                menuItem("3. Check or customize the reference sample",
                          icon = icon("table"),
-                         tabName = "tab_settings"),
+                         tabName = "tab_ref_sample"),
                 menuItem("4. Perform sex estimation",
                          icon = icon("venus-mars"),
                          tabName = "tab_dss"),
@@ -125,7 +126,8 @@ ui_dss <- dashboardPage(skin = "purple",
                               accept = c(".csv", ".txt")),
                     actionButton(inputId = "button_load_data",
                                  label = "Load dataset",
-                                 icon = icon("file-upload"))
+                                 icon = icon("file-upload")),
+                    textOutput(outputId = "text_data_ok")
                     ),
                 box(title = "Help & additional instructions",
                     width = 6,
@@ -144,6 +146,7 @@ ui_dss <- dashboardPage(skin = "purple",
                       tags$li("An example data file is available here.")
                       )
                     ))),
+
       ## 2.2. Tab for selecting the target individual:
       tabItem(tabName = "tab_target_indiv",
               h2("2. Select the target individual"),
@@ -157,8 +160,15 @@ ui_dss <- dashboardPage(skin = "purple",
               h4("Overview"),
               textOutput(outputId = "text_description_target"),
               ),
+
       ## 2.3. Tab for data exploration and analysis settings:
-      tabItem(tabName = "tab_settings",
+      tabItem(tabName = "tab_ref_sample",
+              h2("3. Check or customize the reference sample"),
+              h3("Reference sample for the current target individual"),
+              tags$b(textOutput(outputId = "text_summary_ref")),
+              br(),
+              DTOutput(outputId = "DT_ref_sample"),
+              h3("Subsetting/filtering criteria"),
               fluidRow(
                 box(title = "Settings",
                     width = 3,
@@ -167,8 +177,8 @@ ui_dss <- dashboardPage(skin = "purple",
                     textInput("indivName",
                               label = "Name of the individual to be estimated",
                               value = "Indiv01")
-                    )
-              )),
+                    ))),
+
       ## 2.5. Help
       tabItem(tabName = "tab_help",
               h3("Quick help and tips")

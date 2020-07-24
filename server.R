@@ -24,6 +24,8 @@ dss_server <- function(input, output, session) {
       updateSelectInput(session,
                         inputId = "select_target_indiv",
                         choices = rownames(tbd))
+      ## Return a message to say OK:
+      output$text_data_ok <- renderText("Data file loaded successfully!")
     } else { # the user provided no data file
       showModal(modalDialog(title = "Error",
                             "Please select a file on your computer.",
@@ -67,6 +69,37 @@ dss_server <- function(input, output, session) {
     }
   })
 
+###############################################
+### 3. Constitution of the reference sample ###
+###############################################
+  ## Whole reference sample:
+  ref <- reactive({
+    row_ref <- rownames(dat())[dat()[, input$name_sex_column] != input$indic_tbd]
+    col_ref <- colnames(dat())[!is.na(target()[1, ])]
+    return(dat()[row_ref, col_ref])
+  })
+
+  output$DT_ref_sample <- DT::renderDataTable(
+    DT::datatable(ref(), options = list(pageLength = 5))
+    )
+
+  ## (Text) summary for the reference sample:
+  output$text_summary_ref <- renderText({
+    if (! is.null(target())) {
+      fem <- ref()[ref()[, input$name_sex_column] == input$indic_females, ]
+      mal <- ref()[ref()[, input$name_sex_column] == input$indic_males, ]
+      paste("The reference sample has currently ",
+            nrow(fem),
+            " female individuals (",
+            nrow(na.omit(fem)),
+            " of them have no missing values), and ",
+            nrow(mal),
+            " male individuals (",
+            nrow(na.omit(mal)),
+            " of them have no missing values).",
+            sep = "")
+    }
+  })
 }
 
 ### Local variables:
