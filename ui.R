@@ -53,6 +53,18 @@ ui_dss <- dashboardPage(skin = "purple",
       }
       .box.box-solid.box-info{
         border:#666666;
+      }
+      .irs-bar {
+        border-top: 1px solid #605ca8;
+        border-bottom: 1px solid #605ca8;
+        background: #605ca8;
+      }
+      .irs-bar-edge {
+        border: 1px solid #605ca8;
+        background: #605ca8;
+      }
+      .irs-single {
+        background: #605ca8;
       }")),
 
     tabItems(
@@ -161,22 +173,77 @@ ui_dss <- dashboardPage(skin = "purple",
               textOutput(outputId = "text_description_target"),
               ),
 
-      ## 2.3. Tab for data exploration and analysis settings:
+      ## 2.3. Tab for customization of the reference sample:
       tabItem(tabName = "tab_ref_sample",
               h2("3. Check or customize the reference sample"),
               h3("Reference sample for the current target individual"),
               tags$b(textOutput(outputId = "text_summary_ref")),
               br(),
-              DTOutput(outputId = "DT_ref_sample"),
+              box(title = "Inspect the current reference dataset",
+                  width = 12,
+                  solidHeader = TRUE,
+                  collapsible = TRUE,
+                  collapsed = TRUE,
+                  DTOutput(outputId = "DT_ref_sample")
+                  ),
+              box(title = "Patterns of missing data within the reference dataset",
+                  width = 12,
+                  solidHeader = TRUE,
+                  collapsible = TRUE,
+                  collapsed = FALSE,
+                  fluidRow(
+                    column(9,
+                           plotOutput(outputId = "plot_md_pattern",
+                                      width = "100%")
+                           ),
+                    column(3,
+                           tags$b("How to read this plot?"),
+                           p("Each row corresponds to one of the patterns of missingness observed in the data.",
+                             "Red is for missing values, blue for non-missing values."),
+                           p("The right column simply counts the missing values appearing in each pattern.",
+                             "The last row gives the total number of missing values for each variable.",
+                             "The left column gives the number of individuals with each pattern."),
+                           p("For more information, see the help page of",
+                             tags$a(href = "https://stefvanbuuren.name/mice/reference/md.pattern.html",
+                                    "mice::md.pattern()"))
+                           )
+                  )),
               h3("Subsetting/filtering criteria"),
               fluidRow(
-                box(title = "Settings",
-                    width = 3,
-                    solidHeader = TRUE,
+                box(title = "Percentage of missing data for individuals",
+                    width = 4,
+                    status = "info",
+                    solidHeader = FALSE,
                     collapsible = TRUE,
-                    textInput("indivName",
-                              label = "Name of the individual to be estimated",
-                              value = "Indiv01")
+                    sliderInput(inputId = "perc_md_indiv",
+                                label = "Maximal percentage of missing data allowed for individuals",
+                                value = 100,
+                                min = 0,
+                                max = 100,
+                                step = 1)
+                    ),
+                box(title = "Inclusion criterion for variables",
+                    width = 4,
+                    status = "info",
+                    solidHeader = FALSE,
+                    collapsible = TRUE,
+                    numericInput(inputId = "nb_min_indiv",
+                                 label = "Minimum number of individuals of each sex required for each variable",
+                                 value = 0,
+                                 min = 0,
+                                 step = 1)
+                    ),
+                box(title = "Percentage of missing data for variables",
+                    width = 4,
+                    status = "info",
+                    solidHeader = FALSE,
+                    collapsible = TRUE,
+                    sliderInput(inputId = "perc_md_variables",
+                                label = "Maximal percentage of missing data allowed for variables",
+                                value = 100,
+                                min = 0,
+                                max = 100,
+                                step = 1)
                     ))),
 
       ## 2.5. Help

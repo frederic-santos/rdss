@@ -26,6 +26,8 @@ dss_server <- function(input, output, session) {
                         choices = rownames(tbd))
       ## Return a message to say OK:
       output$text_data_ok <- renderText("Data file loaded successfully!")
+      ## TODO : update des critères de l'onglet 3 après import du fichier :
+      ## - max du numericInput
     } else { # the user provided no data file
       showModal(modalDialog(title = "Error",
                             "Please select a file on your computer.",
@@ -98,6 +100,14 @@ dss_server <- function(input, output, session) {
             nrow(na.omit(mal)),
             " of them have no missing values).",
             sep = "")
+    }
+  })
+
+  ## Pattern of missing values in the reference dataset:
+  output$plot_md_pattern <- renderPlot({
+    if (! is.null(target())) {
+      par(mar = c(1, 1, 1, 1))
+      mice::md.pattern(x = ref(), plot = TRUE)
     }
   })
 }
