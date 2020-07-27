@@ -1,4 +1,5 @@
 library(shiny)
+library(anthrostat)
 
 dss_server <- function(input, output, session) {
 
@@ -84,7 +85,8 @@ dss_server <- function(input, output, session) {
     return(dat()[row_ref, col_ref])
   })
 
-  ## Current (filtered) reference sample:
+  ## Current reference sample
+  ## (filtered from ref(), using the UI-defined criteria):
   current <- reactiveValues(
     df = NULL # fake init to NULL...
   )
@@ -92,9 +94,11 @@ dss_server <- function(input, output, session) {
     current$df <- ref() # ... and instantly set to ref() after data loading
   })
   observeEvent(input$perc_md_variables, {
-    current$df <- current$df[1:4, 1:4] # /!\ !!!!!!!!!!! TEST ONLY. évidemment à modifier !!!!!!!!!!!!!
-  })
-  
+    current$df <- anthrostat::remove_na(current$df,
+                                        which = "var",
+                                        prop_min = 1 - input$perc_md_variables / 100)
+  }, ignoreInit = TRUE)
+
   ## Display reference sample:
   output$DT_ref_sample <- DT::renderDataTable(
     DT::datatable(current$df, options = list(pageLength = 5))
@@ -124,6 +128,20 @@ dss_server <- function(input, output, session) {
       par(mar = c(1, 1, 1, 1))
       mice::md.pattern(x = current$df, plot = TRUE)
     }
+  })
+
+  ## Reload whole reference sample if `reload' button is triggered:
+  observeEvent(input$reload_ref, {
+    updateSliderInput(session,
+                      inputId = "perc_md_variables",
+                      value = 100)
+    updateSliderInput(session,
+                      inputId = "perc_md_indiv",
+                      value = 100)
+    updateNumericInput(session,
+                       inputId = "nb_min_indiv",
+                       value = 0)
+    current$df <- ref()
   })
 }
 
