@@ -1,5 +1,6 @@
 library(shiny)
 library(anthrostat)
+source("update_history.R")
 
 dss_server <- function(input, output, session) {
 
@@ -102,6 +103,9 @@ dss_server <- function(input, output, session) {
     current$df <- anthrostat::remove_na(current$df,
                                         which = "var",
                                         prop_min = user_choice)
+    history$df <- update_history(history$df,
+                                 "Maximal %NA allowed for variables",
+                                 input$perc_md_variables)
   }, ignoreInit = TRUE) # ignoreInit is important to avoid a crash here
 
   observeEvent(input$perc_md_indiv, {
@@ -109,6 +113,9 @@ dss_server <- function(input, output, session) {
     current$df <- anthrostat::remove_na(current$df,
                                         which = "ind",
                                         prop_min = user_choice)
+    history$df <- update_history(history$df,
+                                 "Maximal %NA allowed for individuals",
+                                 input$perc_md_indiv)
   }, ignoreInit = TRUE) # ignoreInit is important to avoid a crash here
 
   observeEvent(input$nb_min_indiv, {
@@ -117,6 +124,9 @@ dss_server <- function(input, output, session) {
                            FUN = function(x) return(sum(!is.na(x))))[, -1]
     min_per_var <- apply(sex_count, MARGIN = 2, FUN = min)
     current$df <- current$df[, min_per_var >= input$nb_min_indiv]
+    history$df <- update_history(history$df,
+                                 "Required number of individuals for each sex",
+                                 input$nb_min_indiv)
   }, ignoreInit = TRUE) # ignoreInit is important to avoid a crash here
 
   #############################################
@@ -171,7 +181,17 @@ dss_server <- function(input, output, session) {
                        inputId = "nb_min_indiv",
                        value = 0)
     current$df <- ref()
+    history$df <- NULL
   })
+
+  #############
+  ## History ##
+  #############
+  history <- reactiveValues(
+    df = NULL
+  )
+  output$table_history <- renderTable(history$df,
+                                      rownames = 1)
 }
 
 ### Local variables:

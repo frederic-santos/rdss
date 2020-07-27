@@ -253,8 +253,19 @@ ui_dss <- dashboardPage(skin = "purple",
                 actionButton(inputId = "reload_ref",
                              label = "Cancel all criteria",
                              icon = icon("redo"))
-                )),
+              ),
+              h4("History of filtering criteria"),
+              tableOutput(outputId = "table_history")
+              ),
 
+      ## 2.4. DSS
+      tabItem(tabName = "tab_dss",
+              h2("4. Perform sex estimation"),
+              h3("Analysis settings"),
+              h3("Principal component analysis"),
+              h3("Sex estimation")
+              ),
+      
       ## 2.5. Help
       tabItem(tabName = "tab_help",
               h3("Quick help and tips")
