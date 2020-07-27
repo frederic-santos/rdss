@@ -78,7 +78,7 @@ dss_server <- function(input, output, session) {
 ###############################################
 ### 3. Constitution of the reference sample ###
 ###############################################
-  ## Whole reference sample:
+  ## Create whole reference sample for the current target indiv:
   ref <- reactive({
     row_ref <- rownames(dat())[dat()[, input$name_sex_column] != input$indic_tbd]
     col_ref <- colnames(dat())[!is.na(target()[1, ])]
@@ -97,14 +97,14 @@ dss_server <- function(input, output, session) {
     current$df <- anthrostat::remove_na(current$df,
                                         which = "var",
                                         prop_min = 1 - input$perc_md_variables / 100)
-  }, ignoreInit = TRUE)
+  }, ignoreInit = TRUE) # ignoreInit is important to avoid a crash here
 
-  ## Display reference sample:
+  ## Display reference sample in a DataTable:
   output$DT_ref_sample <- DT::renderDataTable(
     DT::datatable(current$df, options = list(pageLength = 5))
     )
 
-  ## (Text) summary for the reference sample:
+  ## Display (text) summary for the reference sample:
   output$text_summary_ref <- renderText({
     if (! is.null(target())) {
       fem <- current$df[current$df[, input$name_sex_column] == input$indic_females, ]
@@ -122,7 +122,7 @@ dss_server <- function(input, output, session) {
     }
   })
 
-  ## Pattern of missing values in the reference dataset:
+  ## Display pattern of missing values in the reference dataset:
   output$plot_md_pattern <- renderPlot({
     if (! is.null(target())) {
       par(mar = c(1, 1, 1, 1))
@@ -130,7 +130,8 @@ dss_server <- function(input, output, session) {
     }
   })
 
-  ## Reload whole reference sample if `reload' button is triggered:
+  ## Reload whole reference sample if `reload' button is triggered
+  ## (and reset all UI widgets in 3rd tab):
   observeEvent(input$reload_ref, {
     updateSliderInput(session,
                       inputId = "perc_md_variables",
