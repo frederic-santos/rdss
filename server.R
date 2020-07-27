@@ -93,18 +93,42 @@ dss_server <- function(input, output, session) {
   observeEvent(target(), {
     current$df <- ref() # ... and instantly set to ref() after data loading
   })
+
+  ###################################################################
+  ## Update current reference sample according to the 3 UI widgets ##
+  ###################################################################
   observeEvent(input$perc_md_variables, {
+    user_choice <- 1 - input$perc_md_variables / 100
     current$df <- anthrostat::remove_na(current$df,
                                         which = "var",
-                                        prop_min = 1 - input$perc_md_variables / 100)
+                                        prop_min = user_choice)
   }, ignoreInit = TRUE) # ignoreInit is important to avoid a crash here
 
-  ## Display reference sample in a DataTable:
+  observeEvent(input$perc_md_indiv, {
+    user_choice <- 1 - input$perc_md_indiv / 100
+    current$df <- anthrostat::remove_na(current$df,
+                                        which = "ind",
+                                        prop_min = user_choice)
+  }, ignoreInit = TRUE) # ignoreInit is important to avoid a crash here
+
+  observeEvent(input$nb_min_indiv, {
+    sex_count <- aggregate(current$df,
+                           by = list(current$df[, input$name_sex_column]),
+                           FUN = function(x) return(sum(!is.na(x))))[, -1]
+    min_per_var <- apply(sex_count, MARGIN = 2, FUN = min)
+    current$df <- current$df[, min_per_var >= input$nb_min_indiv]
+  }, ignoreInit = TRUE) # ignoreInit is important to avoid a crash here
+
+  #############################################
+  ## Display reference sample in a DataTable ##
+  #############################################
   output$DT_ref_sample <- DT::renderDataTable(
     DT::datatable(current$df, options = list(pageLength = 5))
     )
 
-  ## Display (text) summary for the reference sample:
+  #####################################################
+  ## Display (text) summary for the reference sample ##
+  #####################################################
   output$text_summary_ref <- renderText({
     if (! is.null(target())) {
       fem <- current$df[current$df[, input$name_sex_column] == input$indic_females, ]
@@ -122,16 +146,20 @@ dss_server <- function(input, output, session) {
     }
   })
 
-  ## Display pattern of missing values in the reference dataset:
+  ################################################################
+  ## Display pattern of missing values in the reference dataset ##
+  ################################################################
   output$plot_md_pattern <- renderPlot({
     if (! is.null(target())) {
       par(mar = c(1, 1, 1, 1))
       mice::md.pattern(x = current$df, plot = TRUE)
     }
   })
-
-  ## Reload whole reference sample if `reload' button is triggered
-  ## (and reset all UI widgets in 3rd tab):
+  
+  ###################################################################
+  ## Reload whole reference sample if `reload' button is triggered ##
+  ## (and reset all UI widgets in 3rd tab)                         ##
+  ###################################################################
   observeEvent(input$reload_ref, {
     updateSliderInput(session,
                       inputId = "perc_md_variables",
