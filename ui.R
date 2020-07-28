@@ -184,7 +184,8 @@ ui_dss <- dashboardPage(skin = "purple",
                   solidHeader = TRUE,
                   collapsible = TRUE,
                   collapsed = TRUE,
-                  DTOutput(outputId = "DT_ref_sample")
+                  DTOutput(outputId = "DT_ref_sample"),
+                  downloadButton("download_ref_sample", "Download (.csv)")
                   ),
               box(title = "Patterns of missing data within the reference dataset",
                   width = 12,
@@ -251,7 +252,7 @@ ui_dss <- dashboardPage(skin = "purple",
                                 step = 1)
                     ),
                 actionButton(inputId = "reload_ref",
-                             label = "Cancel all criteria",
+                             label = "Cancel all criteria and reload data",
                              icon = icon("redo"))
               ),
               h4("History of filtering criteria"),
@@ -261,11 +262,75 @@ ui_dss <- dashboardPage(skin = "purple",
       ## 2.4. DSS
       tabItem(tabName = "tab_dss",
               h2("4. Perform sex estimation"),
-              h3("Analysis settings"),
-              h3("Principal component analysis"),
-              h3("Sex estimation")
+              box(title = "Analysis settings",
+                  width = 12,
+                  status = "info",
+                  collapsible = TRUE,
+                  fluidRow(
+                    column(3,
+                           sliderInput(
+                             inputId = "slider_nb_models",
+                             label = "Number of logistic regression models",
+                             min = 1,
+                             value = 2,
+                             max = 5,
+                             step = 1
+                           )),
+                    column(3,
+                           sliderInput(
+                             inputId = "slider_nb_max_variables",
+                             label = paste("Maximal number of variables",
+                                           "allowed in regression models"),
+                             min = 2,
+                             max = 10,
+                             step = 1,
+                             value = 10)),
+                    column(3,
+                           tags$b("Bias reduction for GLMs"),
+                           p("If selected, the logistic regression models",
+                             "will be computed using the R package",
+                             tags$a(href="https://cran.r-project.org/web/packages/brglm2/index.html", "brglm2")),
+                           checkboxInput(
+                             inputId = "checkobox_bias_LR",
+                             label = "Apply bias reduction",
+                             value = TRUE)),
+                    column(3,
+                           selectInput(
+                             inputId = "select_conf_level",
+                             label = "Confidence level for sex estimation",
+                             choices = c("90%" = 0.9, "95%" = 0.95),
+                             selected = 0.95))),
+                  actionButton(inputId = "button_start_dss",
+                               label = "Launch sex estimation",
+                               icon = icon("rocket"))
+                  ),
+              box(title = "Principal component analysis",
+                  width = 12,
+                  collapsible = TRUE,
+                  collapsed = TRUE,
+                  solidHeader = TRUE,
+                  fluidRow(
+                    column(6,
+                           checkboxInput(
+                             inputId = "checkbox_pca_names",
+                             label = "Display individual names",
+                             value = FALSE)
+                           ),
+                    column(6,
+                           checkboxInput(
+                             inputId = "checkbox_pca_ellipses",
+                             label = "Display 95% data ellipses",
+                             value = TRUE)
+                           )
+                  ),
+                  plotOutput("plot_pca"),
+                  downloadButton("download_pca_plot",
+                                 label = "Download PCA plot (.png)")),
+              box(title = "Sex estimation",
+                  width = 12,
+                  solidHeader = TRUE)
               ),
-      
+
       ## 2.5. Help
       tabItem(tabName = "tab_help",
               h3("Quick help and tips")

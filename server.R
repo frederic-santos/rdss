@@ -1,6 +1,10 @@
 library(shiny)
 library(anthrostat)
+library(FactoMineR)
+library(missMDA)
+library(car)
 source("update_history.R")
+source("dss_plot_pca.R")
 
 dss_server <- function(input, output, session) {
 
@@ -95,6 +99,13 @@ dss_server <- function(input, output, session) {
     current$df <- ref() # ... and instantly set to ref() after data loading
   })
 
+  ## Download ref sample:
+  output$download_ref_sample <- downloadHandler(
+    filename = paste("ref_data_", input$select_target_indiv, ".csv", sep = ""),
+    content = function(file) {
+      write.csv(current$df, file)
+    })
+
   ###################################################################
   ## Update current reference sample according to the 3 UI widgets ##
   ###################################################################
@@ -165,7 +176,7 @@ dss_server <- function(input, output, session) {
       mice::md.pattern(x = current$df, plot = TRUE)
     }
   })
-  
+
   ###################################################################
   ## Reload whole reference sample if `reload' button is triggered ##
   ## (and reset all UI widgets in 3rd tab)                         ##
@@ -192,6 +203,17 @@ dss_server <- function(input, output, session) {
   )
   output$table_history <- renderTable(history$df,
                                       rownames = 1)
+
+#################################
+### 4. Perform sex estimation ###
+#################################
+  ## PCA:
+  output$plot_pca <- renderPlot({
+    dss_plot_pca(ref = current$df, target = target(),
+                 ellipses = input$checkbox_pca_ellipses,
+                 labels = input$checkbox_pca_names,
+                 sex = input$name_sex_column)
+  })
 }
 
 ### Local variables:
