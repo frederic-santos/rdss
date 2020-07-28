@@ -3,8 +3,10 @@ library(anthrostat)
 library(FactoMineR)
 library(missMDA)
 library(car)
+
 source("update_history.R")
 source("dss_plot_pca.R")
+source("check_data_dss.R")
 
 dss_server <- function(input, output, session) {
 
@@ -14,36 +16,40 @@ dss_server <- function(input, output, session) {
 ### 1. Read the dataset imported through the UI ###
 ###################################################
   observeEvent(input$button_load_data, {
-    ## check that the user has indeed loaded a file:
+    ## Check that the user has indeed loaded a file:
     if (! is.null(input$data_file$name)) {
-      ## TODO: ajouter vérification du fichier avant import
-      dat <- read.table(file = input$data_file$datapath,
+      ## Import file (without knowing yet whether it is valid):
+      dtf <- read.table(file = input$data_file$datapath,
                         header = TRUE,
-                        row.names = 1,
                         sep = input$field_sep,
                         dec = input$dec_sep,
                         na.strings = input$text_NA,
                         stringsAsFactors = TRUE)
-      ## Extract TBD individuals:
-      tbd <- dat[dat[, input$name_sex_column] == input$indic_tbd, ]
-      ## Update list of TBD individuals:
-      updateSelectInput(session,
-                        inputId = "select_target_indiv",
-                        choices = rownames(tbd))
-      ## Return a message to say OK:
-      output$text_data_ok <- renderText("Data file loaded successfully!")
-      ## TODO : à améliorer (et sans doute déplacer) :
-      ## Update widget for minimal number of indiv:
-      updateNumericInput(session,
-                         inputId = "nb_min_indiv",
-                         max = nrow(dat) - nrow(tbd))
+      ## Check whether the file is valid:
+      dtf <- check_data_dss(dtf)
+      ## If the file is valid:
+      if (! is.null(dtf)) {
+        ## Extract TBD individuals:
+        tbd <- dtf[dtf[, input$name_sex_column] == input$indic_tbd, ]
+        ## Update list of TBD individuals:
+        updateSelectInput(session,
+                          inputId = "select_target_indiv",
+                          choices = rownames(tbd))
+        ## Return a message to say OK:
+        output$text_data_ok <- renderText("Data file loaded successfully!")
+        ## TODO : à améliorer (et sans doute déplacer) :
+        ## Update widget for minimal number of indiv:
+        updateNumericInput(session,
+                           inputId = "nb_min_indiv",
+                           max = nrow(dtf) - nrow(tbd))
+        ## store data into the app environment:
+        assign("dtf", value = dtf, envir = dss_env)
+      }
     } else { # the user provided no data file
       showModal(modalDialog(title = "Error",
                             "Please select a file on your computer.",
                             easyClose = TRUE))
     }
-    ## store data into the app environment:
-    assign("dat", value = dat, envir = dss_env)
   })
 
 ########################################
@@ -51,8 +57,8 @@ dss_server <- function(input, output, session) {
 ########################################
   ## Reactive expression for the whole dataset:
   dat <- reactive({
-    if (input$button_load_data > 0 & exists("dat", envir = dss_env)) {
-      get("dat", envir = dss_env)
+    if (input$button_load_data > 0 & exists("dtf", envir = dss_env)) {
+      get("dtf", envir = dss_env)
     } else {
       return()
     }
@@ -60,7 +66,7 @@ dss_server <- function(input, output, session) {
 
   ## Reactive expression for the TBD individual only:
   target <- reactive({
-    return(dat()[input$select_target_indiv, ])
+      return(dat()[input$select_target_indiv, ])
   })
 
   ## Render and display the selected target individual:
