@@ -26,7 +26,11 @@ dss_server <- function(input, output, session) {
                         na.strings = input$text_NA,
                         stringsAsFactors = TRUE)
       ## Check whether the file is valid:
-      dtf <- check_data_dss(dtf)
+      dtf <- check_data_dss(file = dtf,
+                            sex = input$name_sex_column,
+                            females = input$indic_females,
+                            males = input$indic_males,
+                            tbd = input$indic_tbd)
       ## If the file is valid:
       if (! is.null(dtf)) {
         ## Extract TBD individuals:
