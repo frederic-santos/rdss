@@ -1,13 +1,3 @@
-library(shiny)
-library(anthrostat)
-library(FactoMineR)
-library(missMDA)
-library(car)
-
-source("update_history.R")
-source("dss_plot_pca.R")
-source("check_data_dss.R")
-
 dss_server <- function(input, output, session) {
 
   dss_env <- new.env() # app private envirnoment
@@ -172,7 +162,9 @@ dss_server <- function(input, output, session) {
             nrow(mal),
             " male individuals (",
             nrow(na.omit(mal)),
-            " of them have no missing values).",
+            " of them have no missing values). In total, ",
+            total_perc_missing(current$df, input$name_sex_column),
+            "% of data cells are missing.",
             sep = "")
     }
   })
@@ -217,6 +209,11 @@ dss_server <- function(input, output, session) {
 #################################
 ### 4. Perform sex estimation ###
 #################################
+  ## Impute missing data:
+  imputed_ref <- eventReactive(input$button_start_dss, {
+    missMDA::imputePCA(X = current$df,
+                       method = "EM")
+  })
   ## PCA:
   output$plot_pca <- renderPlot({
     dss_plot_pca(ref = current$df, target = target(),

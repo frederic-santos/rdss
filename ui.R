@@ -2,6 +2,15 @@ library(mice)
 library(shiny)
 library(shinydashboard)
 library(DT)
+library(anthrostat)
+library(FactoMineR)
+library(missMDA)
+library(car)
+
+source("update_history.R")
+source("dss_plot_pca.R")
+source("check_data_dss.R")
+source("total_perc_missing.R")
 
 ui_dss <- dashboardPage(skin = "purple",
   dashboardHeader(title = "Sex estimation",
