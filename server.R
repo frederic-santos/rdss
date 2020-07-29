@@ -170,7 +170,8 @@ dss_server <- function(input, output, session) {
     if (! is.null(target())) {
       paste("In total, ",
             total_perc_missing(current$df, input$name_sex_column),
-            "% of data cells are missing.",
+            "% of data cells are missing. ",
+            "Patterns of missing data are as follows:",
             sep = "")
     }
   })
@@ -215,12 +216,30 @@ dss_server <- function(input, output, session) {
 #################################
 ### 4. Perform sex estimation ###
 #################################
-  ## Impute missing data:
+  ## 4.1. Impute missing data:
   imputed_ref <- eventReactive(input$button_start_dss, {
-    missMDA::imputePCA(X = current$df,
-                       method = "EM")
+    perc_na <- total_perc_missing(current$df, input$name_sex_column)
+    if (perc_na >= 50) {
+      showModal(modalDialog(title = "Too many missing values",
+                            paste("There is more than 50% of missing data",
+                                  "cells in the current reference sample.",
+                                  "Sex estimation cannot be reliable in this",
+                                  "context. Go back to the previous tab and",
+                                  "try to lower this percentage."),
+                            easyClose = TRUE))
+      return()
+    } else if (perc_na >= 35) {
+      showModal(modalDialog(title = "High percentage of missing values",
+                            paste("There is more than 35% of missing data",
+                                  "cells in the current reference sample.",
+                                  "Sex estimation will be performed, but",
+                                  "it might not be reliable."),
+                            easyClose = TRUE))
+    }
+    missMDA::imputePCA(X = current$df)
   })
-  ## PCA:
+  
+  ## 4.2. PCA:
   output$plot_pca <- renderPlot({
     dss_plot_pca(ref = current$df, target = target(),
                  ellipses = input$checkbox_pca_ellipses,

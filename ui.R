@@ -6,6 +6,7 @@ library(anthrostat)
 library(FactoMineR)
 library(missMDA)
 library(car)
+library(Amelia)
 
 source("update_history.R")
 source("dss_plot_pca.R")
