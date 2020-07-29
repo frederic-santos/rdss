@@ -85,7 +85,8 @@ dss_server <- function(input, output, session) {
 ###############################################
   ## Create whole reference sample for the current target indiv:
   ref <- reactive({
-    row_ref <- rownames(dat())[dat()[, input$name_sex_column] != input$indic_tbd]
+    row_ref <- rownames(dat())[dat()[, 1] != input$indic_tbd]
+    ## (reminder: the 1st column is the Sex factor)
     col_ref <- colnames(dat())[!is.na(target()[1, ])]
     return(dat()[row_ref, col_ref])
   })
@@ -152,8 +153,9 @@ dss_server <- function(input, output, session) {
   #####################################################
   output$text_summary_ref <- renderText({
     if (! is.null(target())) {
-      fem <- current$df[current$df[, input$name_sex_column] == input$indic_females, ]
-      mal <- current$df[current$df[, input$name_sex_column] == input$indic_males, ]
+      fem <- current$df[current$df[, 1] == input$indic_females, ]
+      mal <- current$df[current$df[, 1] == input$indic_males, ]
+      ## (reminder: the 1st column is the Sex factor)
       paste("The reference sample has currently ",
             nrow(fem),
             " female individuals (",
@@ -175,13 +177,11 @@ dss_server <- function(input, output, session) {
       return()
     } else if (input$radio_md_ref == "pattern") {
       par(mar = c(1, 1, 1, 1))
-      dat_wt_sex <- current$df[, colnames(current$df) != input$name_sex_column]
-      mice::md.pattern(x = dat_wt_sex,
+      mice::md.pattern(x = current$df[, -1], # without Sex factor
                        plot = TRUE)
     } else if (input$radio_md_ref == "map") {
       par(mar = c(1, 1, 1, 1), cex = 1.3)
-      dat_wt_sex <- current$df[, colnames(current$df) != input$name_sex_column]
-      mm <- visdat::vis_miss(dat_wt_sex)
+      mm <- visdat::vis_miss(current$df[, -1]) # without Sex factor
       mm +
         theme(legend.text = element_text(size = 12),
               axis.text.x = element_text(size = 10),
@@ -222,8 +222,7 @@ dss_server <- function(input, output, session) {
 #################################
   ## 4.1. Impute missing data:
   imputed_ref <- eventReactive(input$button_start_dss, {
-    dat_wt_sex <- current$df[, colnames(current$df) != input$name_sex_column]
-    perc_na <- total_perc_missing(dat_wt_sex, input$name_sex_column)
+    perc_na <- total_perc_missing(current$df, sex = input$name_sex_column)
     if (perc_na >= 50) {
       showModal(modalDialog(title = "Too many missing values",
                             paste("There is more than 50% of missing data",
@@ -241,8 +240,8 @@ dss_server <- function(input, output, session) {
                                   "it might not be reliable."),
                             easyClose = TRUE))
     }
-    data.frame(Sex = current$df[, input$name_sex_column],
-               missMDA::imputePCA(X = dat_wt_sex)$completeObs)
+    data.frame(Sex = current$df[, 1],
+               missMDA::imputePCA(X = current$df[, -1])$completeObs)
   })
 
   ## 4.2. PCA:

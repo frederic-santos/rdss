@@ -8,6 +8,7 @@ library(missMDA)
 library(car)
 library(Amelia)
 library(visdat)
+library(ggplot2)
 
 source("update_history.R")
 source("dss_plot_pca.R")
