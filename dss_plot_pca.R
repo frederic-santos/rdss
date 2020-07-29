@@ -2,6 +2,10 @@ dss_plot_pca <- function(ref = ref, target = target,
                          ellipses = TRUE, labels = FALSE,
                          sex = "Sex") {
 
+    if (is.null(ref)) {
+        return()
+    }
+    
     ## Refactor some details in reference and target data:
     target[, sex] <- factor(target[, sex])
     levels(target[, sex]) <- paste("Target (", rownames(target), ")", sep = "")
