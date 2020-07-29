@@ -179,7 +179,7 @@ ui_dss <- dashboardPage(skin = "purple",
               h4("Values of the selected individual"),
               tableOutput(outputId = "target_indiv_values"),
               h4("Overview"),
-              textOutput(outputId = "text_description_target"),
+              textOutput(outputId = "text_description_target")
               ),
 
       ## 2.3. Tab for customization of the reference sample:
@@ -203,6 +203,7 @@ ui_dss <- dashboardPage(skin = "purple",
                   collapsed = TRUE,
                   fluidRow(
                     column(9,
+                           tags$b(textOutput(outputId = "text_nb_md_ref")),
                            plotOutput(outputId = "plot_md_pattern",
                                       width = "100%")
                            ),

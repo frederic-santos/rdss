@@ -162,7 +162,13 @@ dss_server <- function(input, output, session) {
             nrow(mal),
             " male individuals (",
             nrow(na.omit(mal)),
-            " of them have no missing values). In total, ",
+            " of them have no missing values).",
+            sep = "")
+    }
+  })
+  output$text_nb_md_ref <- renderText({
+    if (! is.null(target())) {
+      paste("In total, ",
             total_perc_missing(current$df, input$name_sex_column),
             "% of data cells are missing.",
             sep = "")
