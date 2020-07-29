@@ -5,7 +5,7 @@ dss_plot_pca <- function(ref = ref, target = target,
     if (is.null(ref)) {
         return()
     }
-    
+
     ## Refactor some details in reference and target data:
     target[, sex] <- factor(target[, sex])
     levels(target[, sex]) <- paste("Target (", rownames(target), ")", sep = "")
@@ -29,12 +29,12 @@ dss_plot_pca <- function(ref = ref, target = target,
                          title = paste("PCA of",
                                        rownames(target),
                                        "and the reference sample"),
-                         col.hab = palette(c("orange", "darkred", "royalblue")))
+                         col.hab = palette(c("black", "darkred", "royalblue")))
     grid()
     ## Display a bigger point for the target indiv:
     points(x = res_pca$ind$coor[1, 1],
            y = res_pca$ind$coor[1, 2],
-           col = "orange", pch = 16, cex = 1.6)
+           col = "black", pch = 16, cex = 1.6)
     ## Add a 95% data ellipse for each group:
     if (ellipses) {
         coor <- res_pca$ind$coor[-1, ]
