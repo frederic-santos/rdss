@@ -166,15 +166,6 @@ dss_server <- function(input, output, session) {
             sep = "")
     }
   })
-  ## output$text_nb_md_ref <- renderText({
-  ##   if (! is.null(target())) {
-  ##     paste("In total, ",
-  ##           total_perc_missing(current$df, input$name_sex_column),
-  ##           "% of data cells are missing. ",
-  ##           "Patterns of missing data are as follows:",
-  ##           sep = "")
-  ##   }
-  ## })
 
   ################################################################
   ## Display pattern of missing values in the reference dataset ##
@@ -231,7 +222,8 @@ dss_server <- function(input, output, session) {
 #################################
   ## 4.1. Impute missing data:
   imputed_ref <- eventReactive(input$button_start_dss, {
-    perc_na <- total_perc_missing(current$df, input$name_sex_column)
+    dat_wt_sex <- current$df[, colnames(current$df) != input$name_sex_column]
+    perc_na <- total_perc_missing(dat_wt_sex, input$name_sex_column)
     if (perc_na >= 50) {
       showModal(modalDialog(title = "Too many missing values",
                             paste("There is more than 50% of missing data",
@@ -249,12 +241,13 @@ dss_server <- function(input, output, session) {
                                   "it might not be reliable."),
                             easyClose = TRUE))
     }
-    missMDA::imputePCA(X = current$df)
+    data.frame(Sex = current$df[, input$name_sex_column],
+               missMDA::imputePCA(X = dat_wt_sex)$completeObs)
   })
-  
+
   ## 4.2. PCA:
   output$plot_pca <- renderPlot({
-    dss_plot_pca(ref = current$df, target = target(),
+    dss_plot_pca(ref = imputed_ref(), target = target(),
                  ellipses = input$checkbox_pca_ellipses,
                  labels = input$checkbox_pca_names,
                  sex = input$name_sex_column)
