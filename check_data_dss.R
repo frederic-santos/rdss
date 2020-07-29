@@ -1,5 +1,10 @@
 check_data_dss <- function(file, sex, females, males, tbd) {
-
+### file: dataframe uploaded by the user
+### sex: string, colname for Sex factor in `file'
+### females, males, tbd: strings, abreviations in Sex factor.
+### Return an error message if `file' is not suitable.
+### Otherwise, return `file' with Sex as its 1st column.
+    
     if (ncol(file) <= 3) {
         ## 1. Check that there are more than three columns:
         showModal(modalDialog(
@@ -64,9 +69,13 @@ check_data_dss <- function(file, sex, females, males, tbd) {
         ))
         return()
     } else {
-        ## The df is valid, thus return it:
+        ## The df is valid, thus return it and put Sex in 1st column:
         rownames(file) <- file[, 1]
         file[, 1] <- NULL
+        dat_wt_sex <- file[, colnames(file) != sex]
+        file <- data.frame(Sex = file[, sex],
+                           dat_wt_sex)
+        colnames(file)[1] <- sex
         return(file)
     }
 }
