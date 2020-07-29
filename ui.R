@@ -7,6 +7,7 @@ library(FactoMineR)
 library(missMDA)
 library(car)
 library(Amelia)
+library(visdat)
 
 source("update_history.R")
 source("dss_plot_pca.R")
@@ -197,33 +198,50 @@ ui_dss <- dashboardPage(skin = "purple",
                   DTOutput(outputId = "DT_ref_sample"),
                   downloadButton("download_ref_sample", "Download (.csv)")
                   ),
-              box(title = "Patterns of missing data within the reference dataset",
+              box(title = "Missing data in the reference dataset",
                   width = 12,
                   solidHeader = TRUE,
                   collapsible = TRUE,
                   collapsed = TRUE,
+                  radioButtons(
+                    inputId = "radio_md_ref",
+                    label = "Type of plot",
+                    choices = c("Missingness map" = "map",
+                                "Patterns of missingness" = "pattern"),
+                    selected = "map",
+                    inline = TRUE
+                    ),
                   fluidRow(
                     column(9,
-                           tags$b(textOutput(outputId = "text_nb_md_ref")),
-                           plotOutput(outputId = "plot_md_pattern",
+                           plotOutput(outputId = "plot_md_ref",
                                       width = "100%")
                            ),
                     column(3,
                            tags$b("How to read this plot?"),
-                           p("Each row corresponds to one of the patterns of",
-                             "missingness observed in the data.",
-                             "Red is for missing values, blue for non-missing",
-                             "values."),
-                           p("The right column simply counts the missing values",
-                             "appearing in each pattern.",
-                             "The last row gives the total number of missing",
-                             "values for each variable.",
-                             "The left column gives the number of individuals",
-                             "with each pattern."),
-                           p("For more information, see the help page of",
-                             tags$a(href = "https://stefvanbuuren.name/mice/reference/md.pattern.html",
-                                    "mice::md.pattern()"))
-                           )
+                           conditionalPanel(
+                             condition = "input.radio_md_ref == 'pattern'",
+                             p("Each row corresponds to one of the patterns of",
+                               "missingness observed in the data.",
+                               "Red is for missing values, blue for non-missing",
+                               "values."),
+                             p("The right column simply counts the missing values",
+                               "appearing in each pattern.",
+                               "The last row gives the total number of missing",
+                               "values for each variable.",
+                               "The left column gives the number of individuals",
+                               "with each pattern."),
+                             p("For more information, see the help page of",
+                               tags$a(href = "https://stefvanbuuren.name/mice/reference/md.pattern.html",
+                                      "mice::md.pattern()"))
+                           ),
+                           conditionalPanel(
+                             condition = "input.radio_md_ref == 'map'",
+                             p("The percentage of missing values for each",
+                               "variable is indicated along with its name."),
+                             p("For more information, see the help page of",
+                               tags$a(href = "http://visdat.njtierney.com/reference/vis_miss.html",
+                                      "visdat::vis_miss()"))
+                             ))
                   )),
               h3("Subsetting/filtering criteria"),
               fluidRow(

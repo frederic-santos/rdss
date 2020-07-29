@@ -166,23 +166,36 @@ dss_server <- function(input, output, session) {
             sep = "")
     }
   })
-  output$text_nb_md_ref <- renderText({
-    if (! is.null(target())) {
-      paste("In total, ",
-            total_perc_missing(current$df, input$name_sex_column),
-            "% of data cells are missing. ",
-            "Patterns of missing data are as follows:",
-            sep = "")
-    }
-  })
+  ## output$text_nb_md_ref <- renderText({
+  ##   if (! is.null(target())) {
+  ##     paste("In total, ",
+  ##           total_perc_missing(current$df, input$name_sex_column),
+  ##           "% of data cells are missing. ",
+  ##           "Patterns of missing data are as follows:",
+  ##           sep = "")
+  ##   }
+  ## })
 
   ################################################################
   ## Display pattern of missing values in the reference dataset ##
   ################################################################
-  output$plot_md_pattern <- renderPlot({
-    if (! is.null(target())) {
+  output$plot_md_ref <- renderPlot({
+    if (is.null(target())) {
+      return()
+    } else if (input$radio_md_ref == "pattern") {
       par(mar = c(1, 1, 1, 1))
-      mice::md.pattern(x = current$df, plot = TRUE)
+      dat_wt_sex <- current$df[, colnames(current$df) != input$name_sex_column]
+      mice::md.pattern(x = dat_wt_sex,
+                       plot = TRUE)
+    } else if (input$radio_md_ref == "map") {
+      par(mar = c(1, 1, 1, 1), cex = 1.3)
+      dat_wt_sex <- current$df[, colnames(current$df) != input$name_sex_column]
+      mm <- visdat::vis_miss(dat_wt_sex)
+      mm +
+        theme(legend.text = element_text(size = 12),
+              axis.text.x = element_text(size = 10),
+              axis.text.y = element_text(size = 12),
+              axis.title.y = element_text(size = 12))
     }
   })
 
