@@ -122,9 +122,13 @@ dss_server <- function(input, output, session) {
 
   observeEvent(input$perc_md_indiv, {
     user_choice <- 1 - input$perc_md_indiv / 100
-    current$df <- anthrostat::remove_na(current$df,
-                                        which = "ind",
-                                        prop_min = user_choice)
+    datfiltered <- anthrostat::remove_na(current$df[, -1],
+                                         which = "ind",
+                                         prop_min = user_choice)
+    datfiltered <- data.frame(current$df[rownames(datfiltered), 1],
+                              datfiltered)
+    colnames(datfiltered)[1] <- input$name_sex_column
+    current$df <- datfiltered
     history$df <- update_history(history$df,
                                  "Maximal %NA allowed for individuals",
                                  input$perc_md_indiv)
@@ -220,7 +224,16 @@ dss_server <- function(input, output, session) {
 #################################
 ### 4. Perform sex estimation ###
 #################################
-  ## 4.1. Impute missing data:
+  ## 4.1. Update UI elements:
+  observe({
+    updateSliderInput(session = session,
+                      inputId = "slider_nb_max_variables",
+                      max = ncol(current$df) - 1,
+                      value = ncol(current$df) - 1,
+                      step = 1)
+  })
+
+  ## 4.2. Impute missing data:
   imputed_ref <- eventReactive(input$button_start_dss, {
     perc_na <- total_perc_missing(current$df, sex = input$name_sex_column)
     if (perc_na >= 50) {
@@ -243,7 +256,7 @@ dss_server <- function(input, output, session) {
     dss_impute_missing(current$df, method = input$radio_imputation_method)
   })
 
-  ## 4.2. PCA:
+  ## 4.3. PCA:
   output$plot_pca <- renderPlot({
     dss_plot_pca(ref = imputed_ref(), target = target(),
                  ellipses = input$checkbox_pca_ellipses,
