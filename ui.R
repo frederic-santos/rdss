@@ -14,6 +14,7 @@ source("update_history.R")
 source("dss_plot_pca.R")
 source("check_data_dss.R")
 source("total_perc_missing.R")
+source("dss_impute_missing.R")
 
 ui_dss <- dashboardPage(skin = "purple",
   dashboardHeader(title = "Sex estimation",

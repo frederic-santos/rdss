@@ -240,7 +240,7 @@ dss_server <- function(input, output, session) {
                                   "it might not be reliable."),
                             easyClose = TRUE))
     }
-    dss_impute_missing(current$df)
+    dss_impute_missing(current$df, method = input$radio_imputation_method)
   })
 
   ## 4.2. PCA:
