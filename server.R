@@ -240,8 +240,7 @@ dss_server <- function(input, output, session) {
                                   "it might not be reliable."),
                             easyClose = TRUE))
     }
-    data.frame(Sex = current$df[, 1],
-               missMDA::imputePCA(X = current$df[, -1])$completeObs)
+    dss_impute_missing(current$df)
   })
 
   ## 4.2. PCA:

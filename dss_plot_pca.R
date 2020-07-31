@@ -29,12 +29,12 @@ dss_plot_pca <- function(ref = ref, target = target,
                          title = paste("PCA of",
                                        rownames(target),
                                        "and the reference sample"),
-                         col.hab = palette(c("black", "darkred", "royalblue")))
+                         col.hab = palette(c("red", "gray15", "gray70")))
     grid()
     ## Display a bigger point for the target indiv:
     points(x = res_pca$ind$coor[1, 1],
            y = res_pca$ind$coor[1, 2],
-           col = "black", pch = 16, cex = 1.6)
+           col = "red", pch = 8, cex = 1.8)
     ## Add a 95% data ellipse for each group:
     if (ellipses) {
         coor <- res_pca$ind$coor[-1, ]
@@ -44,7 +44,7 @@ dss_plot_pca <- function(ref = ref, target = target,
                          groups = sex_ref,
                          levels = 0.95, # 95% ellipse
                          add = TRUE,
-                         col = c("darkred", "royalblue"),
+                         col = c("gray15", "gray70"),
                          center.pch = "", plot.points = FALSE,
                          lwd = 1.1)
     }

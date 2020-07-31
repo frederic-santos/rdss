@@ -297,7 +297,33 @@ ui_dss <- dashboardPage(skin = "purple",
                   status = "info",
                   collapsible = TRUE,
                   fluidRow(
-                    column(3,
+                    column(4,
+                           radioButtons(
+                             inputId = "radio_method_ML",
+                             label = "Method for sex estimation",
+                             choices = c("Logistic regression" = "LR",
+                                         "Random forest" = "RF"),
+                             inline = TRUE)
+                           ),
+                    column(4,
+                           radioButtons(
+                             inputId = "radio_imputation_method",
+                             label = "Method for missing data imputation",
+                             choices = c("Regularized iterative PCA" = "missMDA",
+                                         "Random forests" = "missForest"),
+                             inline = TRUE)
+                           ),
+                    column(4,
+                           radioButtons(
+                             inputId = "select_conf_level",
+                             label = "Posterior prob. threshold for sex estimation",
+                             choices = c("90%" = 0.9, "95%" = 0.95),
+                             inline = TRUE,
+                             selected = 0.95)
+                           )
+                  ),
+                  fluidRow(
+                    column(4,
                            sliderInput(
                              inputId = "slider_nb_models",
                              label = "Number of logistic regression models",
@@ -306,7 +332,7 @@ ui_dss <- dashboardPage(skin = "purple",
                              max = 5,
                              step = 1
                            )),
-                    column(3,
+                    column(4,
                            sliderInput(
                              inputId = "slider_nb_max_variables",
                              label = paste("Maximal number of variables",
@@ -315,21 +341,15 @@ ui_dss <- dashboardPage(skin = "purple",
                              max = 10,
                              step = 1,
                              value = 10)),
-                    column(3,
+                    column(4,
                            tags$b("Bias reduction for GLMs"),
-                           p("If selected, the logistic regression models",
-                             "will be computed using the R package",
+                           p("If selected, Firth's bias-reduced logistic regression",
+                             "will be used, through the R package",
                              tags$a(href="https://cran.r-project.org/web/packages/brglm2/index.html", "brglm2")),
                            checkboxInput(
                              inputId = "checkobox_bias_LR",
                              label = "Apply bias reduction",
-                             value = TRUE)),
-                    column(3,
-                           selectInput(
-                             inputId = "select_conf_level",
-                             label = "Confidence level for sex estimation",
-                             choices = c("90%" = 0.9, "95%" = 0.95),
-                             selected = 0.95))),
+                             value = TRUE))),
                   actionButton(inputId = "button_start_dss",
                                label = "Launch sex estimation",
                                icon = icon("rocket"))
