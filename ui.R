@@ -15,6 +15,7 @@ source("dss_plot_pca.R")
 source("check_data_dss.R")
 source("total_perc_missing.R")
 source("dss_impute_missing.R")
+source("dss_min_fm.R")
 
 ui_dss <- dashboardPage(skin = "purple",
   dashboardHeader(title = "Sex estimation",
@@ -264,11 +265,12 @@ ui_dss <- dashboardPage(skin = "purple",
                     status = "info",
                     solidHeader = FALSE,
                     collapsible = TRUE,
-                    numericInput(inputId = "nb_min_indiv",
-                                 label = "Minimum number of individuals of each sex required for each variable",
-                                 value = 0,
-                                 min = 0,
-                                 step = 1)
+                    sliderInput(inputId = "nb_min_indiv",
+                                label = "Minimum number of individuals of each sex required for each variable",
+                                value = 0,
+                                min = 0,
+                                max = 30,
+                                step = 1)
                     ),
                 box(title = "Percentage of missing data for variables",
                     width = 3,

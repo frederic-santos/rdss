@@ -31,11 +31,13 @@ dss_server <- function(input, output, session) {
                           choices = rownames(tbd))
         ## Return a message to say OK:
         output$text_data_ok <- renderText("Data file loaded successfully!")
-        ## TODO : à améliorer (et sans doute déplacer) :
-        ## Update widget for minimal number of indiv:
-        updateNumericInput(session,
-                           inputId = "nb_min_indiv",
-                           max = nrow(dtf) - nrow(tbd))
+        ## First update of UI widget in 3rd tab:
+        slider_max <- dss_min_fm(dtf = dtf,
+                                 female = input$indic_females,
+                                 male = input$indic_males)
+        updateSliderInput(session = session,
+                          inputId = "nb_min_indiv",
+                          max = slider_max)
         ## store data into the app environment:
         assign("dtf", value = dtf, envir = dss_env)
       }
@@ -173,6 +175,18 @@ dss_server <- function(input, output, session) {
     }
   })
 
+  #######################
+  ## Update UI element ##
+  #######################
+  observeEvent({input$select_target_indiv
+    input$perc_md_indiv}, {
+    updateNumericInput(session = session,
+                       inputId = "nb_min_indiv",
+                       max = dss_min_fm(current$df,
+                                        input$indic_females,
+                                        input$indic_males))
+  }, ignoreInit = TRUE, priority = -1)
+
   ################################################################
   ## Display pattern of missing values in the reference dataset ##
   ################################################################
@@ -205,9 +219,9 @@ dss_server <- function(input, output, session) {
     updateSliderInput(session,
                       inputId = "perc_md_indiv",
                       value = 100)
-    updateNumericInput(session,
-                       inputId = "nb_min_indiv",
-                       value = 0)
+    updateSliderInput(session,
+                      inputId = "nb_min_indiv",
+                      value = 0)
     current$df <- ref()
     history$df <- NULL
   })
