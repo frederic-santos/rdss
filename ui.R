@@ -5,17 +5,21 @@ library(DT)
 library(anthrostat)
 library(FactoMineR)
 library(missMDA)
+library(missForest)
 library(car)
 library(Amelia)
 library(visdat)
 library(ggplot2)
 
-source("update_history.R")
-source("dss_plot_pca.R")
 source("check_data_dss.R")
-source("total_perc_missing.R")
+source("dss_final_estimate.R")
 source("dss_impute_missing.R")
+source("dss_loocv.R")
 source("dss_min_fm.R")
+source("dss_plot_pca.R")
+source("dss_sex_estimation.R")
+source("total_perc_missing.R")
+source("update_history.R")
 
 ui_dss <- dashboardPage(skin = "purple",
   dashboardHeader(title = "Sex estimation",
@@ -363,17 +367,23 @@ ui_dss <- dashboardPage(skin = "purple",
                   collapsed = TRUE,
                   solidHeader = TRUE,
                   fluidRow(
-                    column(6,
+                    column(3,
                            checkboxInput(
                              inputId = "checkbox_pca_names",
-                             label = "Display individual names",
+                             label = tags$b("Display individual names"),
                              value = FALSE)
                            ),
-                    column(6,
-                           checkboxInput(
-                             inputId = "checkbox_pca_ellipses",
-                             label = "Display 95% data ellipses",
-                             value = TRUE)
+                    column(9,
+                           radioButtons(
+                             inputId = "radio_pca_ellipses",
+                             label = "Display ellipses",
+                             inline = TRUE,
+                             choiceNames = c("None",
+                                             "Groups (female/male) 95% ellipses",
+                                             "Multiple imputation ellipses"),
+                             choiceValues = c("none",
+                                              "group_ellipses",
+                                              "mipca_ellipses"))
                            )
                   ),
                   plotOutput("plot_pca"),
