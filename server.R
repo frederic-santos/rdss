@@ -283,8 +283,8 @@ dss_server <- function(input, output, session) {
   results_dss <- reactive({
     dss_sex_estimation(ref = imputed_ref(),
                        target = target(),
-                       conf = input$radio_conf_level,
-                       bias_red = input$checkbox_bias_LR)
+                       conf = as.numeric(input$radio_conf_level),
+                       method = input$radio_method_ML)
   })
   output$table_loocv <- renderTable({
     results_dss()$table_loocv

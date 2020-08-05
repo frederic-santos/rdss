@@ -1,12 +1,8 @@
-dss_sex_estimation <- function(ref, target, conf = 0.95,
-                               nb_max_var = 3, nb_best_mod=5,
-                               bias_red = TRUE) {
+dss_sex_estimation <- function(ref, target, conf = 0.95, method) {
 ### ref : dataframe containing the reference dataset
 ### target: target individual
 ### conf : numeric value in ]0.5, 1[. Threshold pp for sex estimation
-### nb_max_var : numeric value. Maximal number of variables allowed in LR models
-### nb_best_mod : numeric value. Number of LR models retained
-### bias_red : boolean. For LR models: apply Firth's correction or not
+### method: string. "LDA", "RF"
 
     if (is.null(ref)) {
         return()
@@ -15,51 +11,57 @@ dss_sex_estimation <- function(ref, target, conf = 0.95,
     ##################################
     ## 1. Prepare reference dataset ##
     ##################################
-    colnames(ref)[1] <- "Sex"
-    ref$Sex <- factor(ref$Sex)
+    ref_lm <- ref
+    colnames(ref_lm)[1] <- "Sex"
+    ref_lm$Sex <- factor(ref_lm$Sex)
 
     #################################################################
     ## 2. Set up the dataframe in which the results will be stored ##
     #################################################################
-    dtf_res <- matrix(NA, nrow = nb_best_mod, ncol = 9)
-    colnames(dtf_res) <- c("Model", "Nb_F_ref", "Nb_M_ref", "Nb_var",
-                           "%indet_LOOCV", "%accuracy_LOOCV",
-                           "max(coefs)", "Sex estimate", "Prob(Sex==M)")
-    rownames(dtf_res) <- paste("Model", 1:nb_best_mod, sep = "_")
+    dtf_res <- matrix(NA, nrow = 1, ncol = 7)
+    colnames(dtf_res) <- c("Model", "Number of females in ref sample",
+                           "Number of males in ref sample",
+                           "%indeterminate (LOOCV)", "%accuracy (LOOCV)",
+                           "Sex estimate", "Prob(Sex==M)")
+    rownames(dtf_res) <- rownames(target)
     dtf_res <- as.data.frame(dtf_res)
 
     ############################################
     ## 3. Store some constants in the results ##
     ############################################
-    dtf_res[, "Nb_F_ref"] <- nrow(ref[ref$Sex == "F", ])
-    dtf_res[, "Nb_M_ref"] <- nrow(ref[ref$Sex == "M", ])
+    dtf_res[, 2] <- nrow(ref_lm[ref_lm$Sex == "F", ])
+    dtf_res[, 3] <- nrow(ref_lm[ref_lm$Sex == "M", ])
 
     ###############################
     ## 4. Perform sex estimation ##
     ###############################
-    if (bias_red == TRUE) { # apply Firth's correction
-        mod <- logistf::logistf(Sex ~ ., data = ref)
-        mod <- logistf::backward(mod)
-    } else { # classical glm
-        mod <- glm(Sex ~ ., data = ref, family = binomial)
-        mod <- MASS::stepwise(mod, direction = "backward")
+    if (method == "LDA") {
+        mod_cv <- MASS::lda(Sex ~ ., data = ref_lm, CV = TRUE,
+                            prior = c(0.5, 0.5))
+        mod_pred <- MASS::lda(Sex ~ ., data = ref_lm,
+                              prior = c(0.5, 0.5))
+        prediction <- predict(mod_pred, newdata = target)$posterior[, "M"]
+        cv_results <- dss_loocv(mod = mod_cv, ref = ref_lm, conf = conf,
+                                method = method)
+    } else if (method == "RF") {
+        mod <- randomForest(Sex ~ ., data = ref_lm,
+                            classwt = c(0.5, 0.5))
+        prediction <- predict(mod, newdata = target, type = "vote")[, "M"]
+        cv_results <- dss_loocv(mod, ref = ref_lm, conf = conf,
+                                method = method)
     }
-    cv_results <- dss_loocv(mod, ref, conf = conf, br = bias_red)
-    prediction <- predict(mod, newdata = target, type = "response")
 
     #######################
     ## 5. Return results ##
     #######################
     dtf_res[1, "Model"] <- paste("Sex ~",
-                                     paste0(colnames(mod$data),
-                                            collapse = TRUE, sep = "+"))
-    dtf_res[1, "Nb_var"] <- ncol(ref) - 1
-    dtf_res[1, "max(coefs)"] <- max(coef(mod))
-    dtf_res[1, "%indet_LOOCV"] <- cv_results$indet_rate
-    dtf_res[1, "%accur_LOOCV"] <- cv_results$accur_rate
+                                 paste0(colnames(ref_lm[, -1]),
+                                        collapse = "+"))
+    dtf_res[1, "%indeterminate (LOOCV)"] <- cv_results$indet_rate
+    dtf_res[1, "%accuracy (LOOCV)"] <- cv_results$accur_rate
     dtf_res[1, "Prob(Sex==M)"] <- round(prediction, 3)
     dtf_res[1, "Sex estimate"] <- dss_final_estimate(prob_m = prediction,
                                                      conf = conf)
     return(list(res_dss = t(dtf_res),
-                table_loocv = cv_results$cm))
+                table_loocv = cv_results$confusion_matrix))
 }

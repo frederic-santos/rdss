@@ -10,6 +10,8 @@ library(car)
 library(Amelia)
 library(visdat)
 library(ggplot2)
+library(MASS)
+library(randomForest)
 
 source("check_data_dss.R")
 source("dss_final_estimate.R")
@@ -308,30 +310,18 @@ ui_dss <- dashboardPage(skin = "purple",
                            radioButtons(
                              inputId = "radio_method_ML",
                              label = "Method for sex estimation",
-                             choices = c("Logistic regression" = "LR",
+                             choices = c("Linear discriminant analysis" = "LDA",
                                          "Random forest" = "RF"),
                              inline = TRUE)
                            ),
-                    # Here
                     column(4,
                            radioButtons(
                              inputId = "radio_conf_level",
                              label = "Posterior prob. threshold for sex estimation",
-                             choices = c("90%" = 0.9, "95%" = 0.95),
+                             choices = c("50%" = 0.5, "90%" = 0.9, "95%" = 0.95),
                              inline = TRUE,
                              selected = 0.95)
-                           )
-                  ),
-                  fluidRow(
-                    column(4,
-                           sliderInput(
-                             inputId = "slider_nb_models",
-                             label = "Number of logistic regression models",
-                             min = 1,
-                             value = 2,
-                             max = 5,
-                             step = 1
-                           )),
+                           ),
                     column(4,
                            radioButtons(
                              inputId = "radio_imputation_method",
@@ -339,16 +329,8 @@ ui_dss <- dashboardPage(skin = "purple",
                              choices = c("Regularized iterative PCA" = "missMDA",
                                          "Random forests" = "missForest"),
                              inline = TRUE)
-                           ),
-                    column(4,
-                           tags$b("Bias reduction for GLMs"),
-                           p("If selected, Firth's bias-reduced logistic regression",
-                             "will be used, through the R package",
-                             tags$a(href="https://cran.r-project.org/web/packages/brglm2/index.html", "brglm2")),
-                           checkboxInput(
-                             inputId = "checkbox_bias_LR",
-                             label = "Apply bias reduction",
-                             value = TRUE))),
+                           )
+                  ),
                   actionButton(inputId = "button_start_dss",
                                label = "Launch sex estimation",
                                icon = icon("rocket"))
@@ -385,12 +367,13 @@ ui_dss <- dashboardPage(skin = "purple",
                   width = 12,
                   solidHeader = TRUE,
                   fluidRow(
-                    column(6,
+                    column(7,
                            tags$b("Results for the target individual"),
-                           table("table_dss")
+                           tableOutput("table_dss")
                            ),
-                    column(6,
-                           tags$b("Results for the reference dataset in LOOCV"),
+                    column(5,
+                           tags$b("Confusion matrix for the reference dataset"),
+                           tags$b("in LOOCV"),
                            tableOutput("table_loocv")
                            )
                   ))

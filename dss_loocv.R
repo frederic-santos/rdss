@@ -1,8 +1,8 @@
-dss_loocv <- function(mod, ref, conf = 0.95, br = TRUE) {
+dss_loocv <- function(mod, ref, conf = 0.95, method) {
 ### mod : glm model (glm or logistf object)
 ### ref : dataframe. Reference dataset
 ### conf : numeric value. PP threshold for sex estimation
-### br : boolean. Apply Firth's correction or not.
+### method: string. "LDA", "RF"
 ### output -> vector of length 2: c(%indet, %accuracy).
 
     ##########################################
@@ -14,30 +14,30 @@ dss_loocv <- function(mod, ref, conf = 0.95, br = TRUE) {
     tab_cv[, "True_sex"] <- ref$Sex
 
     #####################################
-    ## 2. Perform LOOCV sex estimation ##
+    ## 2. Extract LOOCV sex estimation ##
     #####################################
-    for (i in seq_len(nrow(ref))) {
-        if (br == TRUE) {
-            mod_cv <- logistf::logistf(Sex ~ ., data = ref[-i, ])
-        } else {
-            mod_cv <- glm(Sex ~ ., data = ref[-i, ], family = binomial)
-        }
-        prob_m <- predict(mod_cv, newdata = ref[i, ], type = "response")
-        tab_cv[i, "ProbM"] <- round(prob_m, 3)
-        tab_cv[i, "Sex_estimate"] <- dss_final_estimate(prob_m, conf = conf)
+    if (method == "LDA") {
+        tab_cv[, "ProbM"] <- mod$posterior[, "M"]
+    } else if (method == "RF") {
+        tab_cv[, "ProbM"] <- mod$votes[, "M"]
+    }
+    for (i in seq_len(nrow(tab_cv))) {
+        tab_cv[i, "Sex_estimate"] <- dss_final_estimate(tab_cv[i, 1],
+                                                        conf = conf)
     }
 
     #################################
     ## 3. Compute and return rates ##
     #################################
-    cm <- table(ref$Sex, tab_cv$Sex_estimate) # confusion matrix
+    ## Confusion matrix:
+    cm <- as.data.frame.matrix(table(ref$Sex, tab_cv$Sex_estimate))
     ## Rate of reference indivs remaining indeterminate in LOOCV:
-    indet_rate <- nrow(tab_cv$Sex_estimate == "I") / nrow(tab_cv)
+    indet_rate <- sum(tab_cv$Sex_estimate == "I") / nrow(tab_cv)
     ## Rate of reference indivs correctly classified:
     deter <- subset(tab_cv, Sex_estimate != "I")
     accur_rate <- sum(deter[, 2] == deter[, 3]) / nrow(deter)
 
-    return(list(indet_rate = perc_indet,
-                accur_rate = success_rate,
+    return(list(indet_rate = round(100 * indet_rate, 1),
+                accur_rate = round(100 * accur_rate, 1),
                 confusion_matrix = cm))
 }
