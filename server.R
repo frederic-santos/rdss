@@ -32,9 +32,7 @@ dss_server <- function(input, output, session) {
         ## Return a message to say OK:
         output$text_data_ok <- renderText("Data file loaded successfully!")
         ## First update of UI widget in 3rd tab:
-        slider_max <- dss_min_fm(dtf = dtf,
-                                 female = input$indic_females,
-                                 male = input$indic_males)
+        slider_max <- dss_min_fm(dtf = dtf)
         updateSliderInput(session = session,
                           inputId = "nb_min_indiv",
                           max = slider_max)
@@ -159,8 +157,8 @@ dss_server <- function(input, output, session) {
   #####################################################
   output$text_summary_ref <- renderText({
     if (! is.null(target())) {
-      fem <- current$df[current$df[, 1] == input$indic_females, ]
-      mal <- current$df[current$df[, 1] == input$indic_males, ]
+      fem <- current$df[current$df[, 1] == "F", ]
+      mal <- current$df[current$df[, 1] == "M", ]
       ## (reminder: the 1st column is the Sex factor)
       paste("The reference sample has currently ",
             nrow(fem),
@@ -182,9 +180,7 @@ dss_server <- function(input, output, session) {
     input$perc_md_indiv}, {
     updateNumericInput(session = session,
                        inputId = "nb_min_indiv",
-                       max = dss_min_fm(current$df,
-                                        input$indic_females,
-                                        input$indic_males))
+                       max = dss_min_fm(current$df))
   }, ignoreInit = TRUE, priority = -1)
 
   ################################################################

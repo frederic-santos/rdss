@@ -1,4 +1,4 @@
-dss_min_fm <- function(dtf, female, male) {
+dss_min_fm <- function(dtf, female = "F", male = "M") {
     if (! is.null(dtf)) {
         nb_f <- sum(dtf[, 1] == female)
         nb_m <- sum(dtf[, 1] == male)
