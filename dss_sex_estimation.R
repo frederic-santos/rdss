@@ -8,6 +8,10 @@ dss_sex_estimation <- function(ref, target, conf = 0.95,
 ### nb_best_mod : numeric value. Number of LR models retained
 ### bias_red : boolean. For LR models: apply Firth's correction or not
 
+    if (is.null(ref)) {
+        return()
+    }
+
     ##################################
     ## 1. Prepare reference dataset ##
     ##################################
@@ -51,8 +55,11 @@ dss_sex_estimation <- function(ref, target, conf = 0.95,
                                             collapse = TRUE, sep = "+"))
     dtf_res[1, "Nb_var"] <- ncol(ref) - 1
     dtf_res[1, "max(coefs)"] <- max(coef(mod))
-    dtf_res[1, c("%indet_LOOCV", "%accuracy_LOOCV")] <- cv_results
+    dtf_res[1, "%indet_LOOCV"] <- cv_results$indet_rate
+    dtf_res[1, "%accur_LOOCV"] <- cv_results$accur_rate
     dtf_res[1, "Prob(Sex==M)"] <- round(prediction, 3)
     dtf_res[1, "Sex estimate"] <- dss_final_estimate(prob_m = prediction,
                                                      conf = conf)
+    return(list(res_dss = t(dtf_res),
+                table_loocv = cv_results$cm))
 }

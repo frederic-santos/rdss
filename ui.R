@@ -312,17 +312,10 @@ ui_dss <- dashboardPage(skin = "purple",
                                          "Random forest" = "RF"),
                              inline = TRUE)
                            ),
+                    # Here
                     column(4,
                            radioButtons(
-                             inputId = "radio_imputation_method",
-                             label = "Method for missing data imputation",
-                             choices = c("Regularized iterative PCA" = "missMDA",
-                                         "Random forests" = "missForest"),
-                             inline = TRUE)
-                           ),
-                    column(4,
-                           radioButtons(
-                             inputId = "select_conf_level",
+                             inputId = "radio_conf_level",
                              label = "Posterior prob. threshold for sex estimation",
                              choices = c("90%" = 0.9, "95%" = 0.95),
                              inline = TRUE,
@@ -340,21 +333,20 @@ ui_dss <- dashboardPage(skin = "purple",
                              step = 1
                            )),
                     column(4,
-                           sliderInput(
-                             inputId = "slider_nb_max_variables",
-                             label = paste("Maximal number of variables",
-                                           "allowed in regression models"),
-                             min = 2,
-                             max = 10,
-                             step = 1,
-                             value = 10)),
+                           radioButtons(
+                             inputId = "radio_imputation_method",
+                             label = "Method for missing data imputation",
+                             choices = c("Regularized iterative PCA" = "missMDA",
+                                         "Random forests" = "missForest"),
+                             inline = TRUE)
+                           ),
                     column(4,
                            tags$b("Bias reduction for GLMs"),
                            p("If selected, Firth's bias-reduced logistic regression",
                              "will be used, through the R package",
                              tags$a(href="https://cran.r-project.org/web/packages/brglm2/index.html", "brglm2")),
                            checkboxInput(
-                             inputId = "checkobox_bias_LR",
+                             inputId = "checkbox_bias_LR",
                              label = "Apply bias reduction",
                              value = TRUE))),
                   actionButton(inputId = "button_start_dss",
@@ -391,7 +383,17 @@ ui_dss <- dashboardPage(skin = "purple",
                                  label = "Download PCA plot (.png)")),
               box(title = "Sex estimation",
                   width = 12,
-                  solidHeader = TRUE)
+                  solidHeader = TRUE,
+                  fluidRow(
+                    column(6,
+                           tags$b("Results for the target individual"),
+                           table("table_dss")
+                           ),
+                    column(6,
+                           tags$b("Results for the reference dataset in LOOCV"),
+                           tableOutput("table_loocv")
+                           )
+                  ))
               ),
 
       ## 2.5. Help

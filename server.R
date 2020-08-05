@@ -272,11 +272,26 @@ dss_server <- function(input, output, session) {
 
   ## 4.3. PCA:
   output$plot_pca <- renderPlot({
-    dss_plot_pca(ref = current$df, imputed_ref = imputed_ref(),
+    dss_plot_pca(ref = current$df,
+                 imputed_ref = imputed_ref(),
                  target = target(),
                  ellipses = input$radio_pca_ellipses,
                  labels = input$checkbox_pca_names)
   })
+
+  ## 4.4. DSS:
+  results_dss <- reactive({
+    dss_sex_estimation(ref = imputed_ref(),
+                       target = target(),
+                       conf = input$radio_conf_level,
+                       bias_red = input$checkbox_bias_LR)
+  })
+  output$table_loocv <- renderTable({
+    results_dss()$table_loocv
+  }, rownames = TRUE, colnames = TRUE)
+  output$table_dss <- renderTable({
+    results_dss()$res_dss
+  }, rownames = TRUE, colnames = TRUE)
 }
 
 ### Local variables:
