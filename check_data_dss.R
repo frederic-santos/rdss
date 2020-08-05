@@ -4,7 +4,7 @@ check_data_dss <- function(file, sex, females, males, tbd) {
 ### females, males, tbd: strings, abreviations in Sex factor.
 ### Return an error message if `file' is not suitable.
 ### Otherwise, return `file' with Sex as its 1st column.
-    
+
     if (ncol(file) <= 3) {
         ## 1. Check that there are more than three columns:
         showModal(modalDialog(
@@ -76,6 +76,9 @@ check_data_dss <- function(file, sex, females, males, tbd) {
         file <- data.frame(Sex = file[, sex],
                            dat_wt_sex)
         colnames(file)[1] <- sex
+        ## Furthermore, standardise factor levels:
+        levels(file[, sex])[levels(file[, sex]) == females] <- "F"
+        levels(file[, sex])[levels(file[, sex]) == males] <- "M"
         return(file)
     }
 }
