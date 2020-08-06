@@ -20,6 +20,7 @@ source("dss_loocv.R")
 source("dss_min_fm.R")
 source("dss_plot_mipca.R")
 source("dss_plot_pca.R")
+source("dss_sensitivity.R")
 source("dss_sex_estimation.R")
 source("total_perc_missing.R")
 source("update_history.R")
@@ -420,7 +421,8 @@ ui_dss <- dashboardPage(skin = "purple",
                   width = 12,
                   collapsible = TRUE,
                   collapsed = TRUE,
-                  solidHeader = TRUE
+                  solidHeader = TRUE,
+                  DTOutput("table_sensitivity")
                   )
               ),
 

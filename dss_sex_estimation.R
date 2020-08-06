@@ -18,19 +18,19 @@ dss_sex_estimation <- function(ref, target, conf = 0.95, method) {
     #################################################################
     ## 2. Set up the dataframe in which the results will be stored ##
     #################################################################
-    dtf_res <- matrix(NA, nrow = 1, ncol = 7)
-    colnames(dtf_res) <- c("Sex estimate", "Prob(Sex==M)",
+    dtf_res <- matrix(NA, nrow = 7, ncol = 1)
+    rownames(dtf_res) <- c("Sex estimate", "Prob(Sex==M)",
                            "Model", "Number of females in ref. sample",
                            "Number of males in ref. sample",
                            "% indeterminate (LOOCV)", "% accuracy (LOOCV)")
-    rownames(dtf_res) <- rownames(target)
+    colnames(dtf_res) <- rownames(target)
     dtf_res <- as.data.frame(dtf_res)
 
     ############################################
     ## 3. Store some constants in the results ##
     ############################################
-    dtf_res[, 4] <- nrow(ref_lm[ref_lm$Sex == "F", ])
-    dtf_res[, 5] <- nrow(ref_lm[ref_lm$Sex == "M", ])
+    dtf_res[4, 1] <- nrow(ref_lm[ref_lm$Sex == "F", ])
+    dtf_res[5, 1] <- nrow(ref_lm[ref_lm$Sex == "M", ])
 
     ###############################
     ## 4. Perform sex estimation ##
@@ -54,14 +54,14 @@ dss_sex_estimation <- function(ref, target, conf = 0.95, method) {
     #######################
     ## 5. Return results ##
     #######################
-    dtf_res[1, "Model"] <- paste("Sex ~",
+    dtf_res["Model", 1] <- paste("Sex ~",
                                  paste0(colnames(ref_lm[, -1]),
                                         collapse = " + "))
-    dtf_res[1, "% indeterminate (LOOCV)"] <- cv_results$indet_rate
-    dtf_res[1, "% accuracy (LOOCV)"] <- cv_results$accur_rate
-    dtf_res[1, "Prob(Sex==M)"] <- round(prediction, 3)
-    dtf_res[1, "Sex estimate"] <- dss_final_estimate(prob_m = prediction,
+    dtf_res["% indeterminate (LOOCV)", 1] <- cv_results$indet_rate
+    dtf_res["% accuracy (LOOCV)", 1] <- cv_results$accur_rate
+    dtf_res["Prob(Sex==M)", 1] <- round(prediction, 3)
+    dtf_res["Sex estimate", 1] <- dss_final_estimate(prob_m = prediction,
                                                      conf = conf)
-    return(list(res_dss = t(dtf_res),
+    return(list(res_dss = dtf_res,
                 table_loocv = cv_results$confusion_matrix))
 }

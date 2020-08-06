@@ -307,12 +307,20 @@ dss_server <- function(input, output, session) {
       mibayes <- missMDA::MIPCA(imp[, -1], ncp = nb$ncp,
                                 method.mi = "Bayes",
                                 nboot = input$slider_nb_mi)
-      return(list(miboot = miboot, mibayes = mibayes))
+      return(list(miboot = miboot, mibayes = mibayes,
+                  refsex = factor(current$df[, 1])))
     }
   })
 
   output$plot_mipca <- renderPlot({
     dss_plot_mipca(mipca()$miboot)
+  })
+  output$table_sensitivity <- DT::renderDataTable({
+    DT::datatable(dss_sensitivity(midata = mipca()$mibayes,
+                                  conf = as.numeric(input$radio_conf_level),
+                                  refsex = mipca()$refsex),
+                  options = list(pageLength = 5))
+    ##DT::datatable(mipca()$mibayes$res.MI[[1]])
   })
 }
 
