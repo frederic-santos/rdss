@@ -1,5 +1,7 @@
 dss_impute_missing <- function(dtf, method = "missMDA") {
-    if (method == "missMDA") {
+    if (total_perc_missing(dtf) == 0) {
+        return(dtf)
+    } else if (method == "missMDA") {
         nb <- missMDA::estim_ncpPCA(dtf[, -1])
         imp <- missMDA::imputePCA(X = dtf[, -1], ncp = nb$ncp)$completeObs
     } else { # method = "missForest"
