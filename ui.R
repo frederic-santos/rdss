@@ -50,6 +50,9 @@ ui_dss <- dashboardPage(skin = "purple",
                 menuItem("4. Perform sex estimation",
                          icon = icon("venus-mars"),
                          tabName = "tab_dss"),
+                menuItem("5. Sensitivity analysis (optional)",
+                         icon = icon("tools"),
+                         tabName = "tab_sensitivity"),
                 menuItem("Help",
                          icon = icon("question-circle"),
                          tabName = "tab_help")
@@ -307,12 +310,12 @@ ui_dss <- dashboardPage(skin = "purple",
                   collapsible = TRUE,
                   fluidRow(
                     column(4,
-                           radioButtons(
-                             inputId = "radio_method_ML",
+                           selectInput(
+                             inputId = "select_method_ML",
                              label = "Method for sex estimation",
                              choices = c("Linear discriminant analysis" = "LDA",
                                          "Random forest" = "RF"),
-                             inline = TRUE)
+                             multiple = FALSE)
                            ),
                     column(4,
                            radioButtons(
@@ -325,7 +328,7 @@ ui_dss <- dashboardPage(skin = "purple",
                     column(4,
                            radioButtons(
                              inputId = "radio_imputation_method",
-                             label = "Method for missing data imputation",
+                             label = "Method for missing data (single) imputation",
                              choices = c("Regularized iterative PCA" = "missMDA",
                                          "Random forests" = "missForest"),
                              inline = TRUE)
@@ -379,7 +382,15 @@ ui_dss <- dashboardPage(skin = "purple",
                   ))
               ),
 
-      ## 2.5. Help
+      ## 2.5. Sensitivity analysis
+      tabItem(tabName = "tab_sensitivity",
+              h2("5. Sensitivity analysis"),
+              p("In this optional step, you can assess the impact of missing",
+                "data imputation in the reference dataset.",
+                "It is meaningless if your dataset is complete."),
+              ),
+
+      ## 2.6. Help
       tabItem(tabName = "tab_help",
               h3("Quick help and tips")
               ))

@@ -280,7 +280,7 @@ dss_server <- function(input, output, session) {
     dss_sex_estimation(ref = imputed_ref(),
                        target = target(),
                        conf = as.numeric(input$radio_conf_level),
-                       method = input$radio_method_ML)
+                       method = input$select_method_ML)
   })
   output$table_loocv <- renderTable({
     results_dss()$table_loocv
