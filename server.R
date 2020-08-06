@@ -271,7 +271,8 @@ dss_server <- function(input, output, session) {
     dss_plot_pca(ref = current$df,
                  imputed_ref = imputed_ref(),
                  target = target(),
-                 ellipses = input$radio_pca_ellipses,
+                 type = "result",
+                 ellipses = input$checkbox_pca_ellipses,
                  labels = input$checkbox_pca_names)
   })
 

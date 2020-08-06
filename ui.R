@@ -347,20 +347,15 @@ ui_dss <- dashboardPage(skin = "purple",
                     column(3,
                            checkboxInput(
                              inputId = "checkbox_pca_names",
-                             label = tags$b("Display individual names"),
+                             label = "Display individuals ID",
                              value = FALSE)
                            ),
                     column(9,
-                           radioButtons(
-                             inputId = "radio_pca_ellipses",
-                             label = "Display ellipses",
-                             inline = TRUE,
-                             choiceNames = c("None",
-                                             "Groups (female/male) 95% ellipses",
-                                             "Multiple imputation ellipses"),
-                             choiceValues = c("none",
-                                              "group_ellipses",
-                                              "mipca_ellipses"))
+                           checkboxInput(
+                             inputId = "checkbox_pca_ellipses",
+                             label = paste("Display 95% data ellipses for groups",
+                                           "(females / males)"),
+                             value = FALSE)
                            )
                   ),
                   plotOutput("plot_pca"),

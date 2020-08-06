@@ -1,5 +1,11 @@
-dss_plot_pca <- function(ref, imputed_ref, target,
-                         ellipses = "group_ellipses", labels = FALSE) {
+dss_plot_pca <- function(ref, imputed_ref, target, type,
+                         ellipses = FALSE, labels = FALSE) {
+### ref: dataframe, reference dataset (with missing values)
+### imputed_ref: dataframe, imputed reference dataset
+### target: 1-row dataframe, target individual
+### type: string, either "result" or "sensitivity",
+### ellipses: boolean (only relevant if type = "result")
+### labels: boolean (only relevant if type = "result")
 
     if (is.null(imputed_ref)) {
         return()
@@ -13,7 +19,7 @@ dss_plot_pca <- function(ref, imputed_ref, target,
     ## PCA plot ##
     ##############
     par(mfrow = c(1, 2))
-    if (ellipses != "mipca_ellipses") {
+    if (type == "result") {
         res_pca <- FactoMineR::PCA(imp_df, quali.sup = 1, graph = FALSE)
         FactoMineR::plot.PCA(res_pca, habillage = 1, choix = "ind",
                              invisible = "quali",
@@ -29,7 +35,7 @@ dss_plot_pca <- function(ref, imputed_ref, target,
                y = res_pca$ind$coor[1, 2],
                col = "red", pch = 8, cex = 1.8)
         ## Add a 95% data ellipse for each group:
-        if (ellipses == "group_ellipses") {
+        if (ellipses == TRUE) {
             coor <- res_pca$ind$coor[-1, ]
             sex_ref <- factor(ref[, 1])
             car::dataEllipse(x = coor[, 1], # PC1
@@ -43,7 +49,7 @@ dss_plot_pca <- function(ref, imputed_ref, target,
         }
         FactoMineR::plot.PCA(res_pca, choix = "var",
                              graph.type = "classic")
-    } else {
+    } else { # type = "sensitivity"
         nb <- missMDA::estim_ncpPCA(df[, -1])
         mipca <- missMDA::MIPCA(df[, -1], ncp = nb$ncp, nboot = 100)
         plot.MIPCA(mipca, choice = "ind.supp",
