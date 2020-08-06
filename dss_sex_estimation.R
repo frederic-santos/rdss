@@ -19,18 +19,18 @@ dss_sex_estimation <- function(ref, target, conf = 0.95, method) {
     ## 2. Set up the dataframe in which the results will be stored ##
     #################################################################
     dtf_res <- matrix(NA, nrow = 1, ncol = 7)
-    colnames(dtf_res) <- c("Model", "Number of females in ref sample",
-                           "Number of males in ref sample",
-                           "%indeterminate (LOOCV)", "%accuracy (LOOCV)",
-                           "Sex estimate", "Prob(Sex==M)")
+    colnames(dtf_res) <- c("Sex estimate", "Prob(Sex==M)",
+                           "Model", "Number of females in ref. sample",
+                           "Number of males in ref. sample",
+                           "% indeterminate (LOOCV)", "% accuracy (LOOCV)")
     rownames(dtf_res) <- rownames(target)
     dtf_res <- as.data.frame(dtf_res)
 
     ############################################
     ## 3. Store some constants in the results ##
     ############################################
-    dtf_res[, 2] <- nrow(ref_lm[ref_lm$Sex == "F", ])
-    dtf_res[, 3] <- nrow(ref_lm[ref_lm$Sex == "M", ])
+    dtf_res[, 4] <- nrow(ref_lm[ref_lm$Sex == "F", ])
+    dtf_res[, 5] <- nrow(ref_lm[ref_lm$Sex == "M", ])
 
     ###############################
     ## 4. Perform sex estimation ##
@@ -56,9 +56,9 @@ dss_sex_estimation <- function(ref, target, conf = 0.95, method) {
     #######################
     dtf_res[1, "Model"] <- paste("Sex ~",
                                  paste0(colnames(ref_lm[, -1]),
-                                        collapse = "+"))
-    dtf_res[1, "%indeterminate (LOOCV)"] <- cv_results$indet_rate
-    dtf_res[1, "%accuracy (LOOCV)"] <- cv_results$accur_rate
+                                        collapse = " + "))
+    dtf_res[1, "% indeterminate (LOOCV)"] <- cv_results$indet_rate
+    dtf_res[1, "% accuracy (LOOCV)"] <- cv_results$accur_rate
     dtf_res[1, "Prob(Sex==M)"] <- round(prediction, 3)
     dtf_res[1, "Sex estimate"] <- dss_final_estimate(prob_m = prediction,
                                                      conf = conf)

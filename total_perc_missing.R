@@ -1,6 +1,6 @@
-total_perc_missing <- function(dtf, sex) {
+total_perc_missing <- function(dtf) {
     ## First remove sex column:
-    dtf <- dtf[, colnames(dtf) != sex]
+    dtf <- dtf[, -1]
     ## Then compute % of missing values:
     perc <- 100 * sum(is.na(dtf)) / (nrow(dtf) * ncol(dtf))
     ## And return a rounded value:

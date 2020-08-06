@@ -18,6 +18,7 @@ source("dss_final_estimate.R")
 source("dss_impute_missing.R")
 source("dss_loocv.R")
 source("dss_min_fm.R")
+source("dss_plot_mipca.R")
 source("dss_plot_pca.R")
 source("dss_sex_estimation.R")
 source("total_perc_missing.R")
@@ -365,11 +366,11 @@ ui_dss <- dashboardPage(skin = "purple",
                   width = 12,
                   solidHeader = TRUE,
                   fluidRow(
-                    column(7,
+                    column(8,
                            tags$b("Results for the target individual"),
                            tableOutput("table_dss")
                            ),
-                    column(5,
+                    column(4,
                            tags$b("Confusion matrix for the reference dataset"),
                            tags$b("in LOOCV"),
                            tableOutput("table_loocv")
@@ -383,6 +384,44 @@ ui_dss <- dashboardPage(skin = "purple",
               p("In this optional step, you can assess the impact of missing",
                 "data imputation in the reference dataset.",
                 "It is meaningless if your dataset is complete."),
+              box(title = "Settings for multiple imputation",
+                  width = 12,
+                  status = "info",
+                  collapsible = TRUE,
+                  fluidRow(
+                    column(8,
+                           sliderInput(inputId = "slider_nb_mi",
+                                       label = paste("Number of imputed",
+                                                     "datasets to create",
+                                                     "for sex estimation"),
+                                       min = 5,
+                                       max = 50,
+                                       value = 10,
+                                       step = 5)
+                           ),
+                    column(4,
+                           helpText("Warning: for a large number of imputed",
+                                    "datasets, the computation may be slow.")
+                           )),
+                  actionButton(inputId = "button_launch_mi",
+                               label = "Launch multiple imputation",
+                               icon = icon("coffee"))
+                  ),
+              box(title = "Multiple imputation principal component analysis (MIPCA)",
+                  width = 12,
+                  collapsible = TRUE,
+                  collapsed = TRUE,
+                  solidHeader = TRUE,
+                  plotOutput("plot_mipca"),
+                  downloadButton("download_mipca_plot",
+                                 label = "Download MIPCA plot (.png)")
+                  ),
+              box(title = "Sex estimation results for each imputed dataset",
+                  width = 12,
+                  collapsible = TRUE,
+                  collapsed = TRUE,
+                  solidHeader = TRUE
+                  )
               ),
 
       ## 2.6. Help

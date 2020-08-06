@@ -245,7 +245,7 @@ dss_server <- function(input, output, session) {
 
   ## 4.2. Impute missing data:
   imputed_ref <- eventReactive(input$button_start_dss, {
-    perc_na <- total_perc_missing(current$df, sex = input$name_sex_column)
+    perc_na <- total_perc_missing(current$df)
     if (perc_na >= 50) {
       showModal(modalDialog(title = "Too many missing values",
                             paste("There is more than 50% of missing data",
@@ -271,7 +271,6 @@ dss_server <- function(input, output, session) {
     dss_plot_pca(ref = current$df,
                  imputed_ref = imputed_ref(),
                  target = target(),
-                 type = "result",
                  ellipses = input$checkbox_pca_ellipses,
                  labels = input$checkbox_pca_names)
   })
@@ -289,6 +288,32 @@ dss_server <- function(input, output, session) {
   output$table_dss <- renderTable({
     results_dss()$res_dss
   }, rownames = TRUE, colnames = TRUE)
+
+###############################
+### 5. Sensitivity analysis ###
+###############################
+  mipca <- eventReactive(input$button_launch_mi, {
+    if (total_perc_missing(current$df) == 0) {
+      ## No imputation will be done if the reference dataset
+      ## is already complete.
+      return()
+    } else { # there are NAs in the reference dataset
+      imp <- merge_target_ref(target = target(), ref = current$df,
+                              name_female = "F", name_male = "M")
+      nb <- missMDA::estim_ncpPCA(imp[, -1])
+      miboot <- missMDA::MIPCA(imp[, -1], ncp = nb$ncp,
+                               method.mi = "Boot",
+                               nboot = 100)
+      mibayes <- missMDA::MIPCA(imp[, -1], ncp = nb$ncp,
+                                method.mi = "Bayes",
+                                nboot = input$slider_nb_mi)
+      return(list(miboot = miboot, mibayes = mibayes))
+    }
+  })
+
+  output$plot_mipca <- renderPlot({
+    dss_plot_mipca(mipca()$miboot)
+  })
 }
 
 ### Local variables:
