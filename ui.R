@@ -384,7 +384,11 @@ ui_dss <- dashboardPage(skin = "purple",
                            tags$b("in LOOCV"),
                            tableOutput("table_loocv")
                            )
-                  ))
+                  ),
+                  downloadButton(outputId = "download_dss_results",
+                                 label = paste("Download sex estimation",
+                                               "results (.csv)"))
+                  )
               ),
 
       ## 2.5. Sensitivity analysis

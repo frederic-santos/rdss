@@ -313,6 +313,19 @@ dss_server <- function(input, output, session) {
     results_dss()$res_dss
   }, rownames = TRUE, colnames = TRUE)
 
+  ## Download table of DSS results:
+  output$download_dss_results <- downloadHandler(
+    filename = paste("sex_estimate_for_",
+                     input$select_target_indiv,
+                     ".csv", sep = ""),
+    content = function(file) {
+      write.csv(dss_sex_estimation(ref = imputed_ref(),
+                                   target = target(),
+                                   conf = as.numeric(input$radio_conf_level),
+                                   method = input$select_method_ML)$res_dss,
+                file = file)
+    })
+
 ###############################
 ### 5. Sensitivity analysis ###
 ###############################
