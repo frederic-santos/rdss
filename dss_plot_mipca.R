@@ -4,7 +4,7 @@ dss_plot_mipca <- function(midata) {
     if (is.null(midata)) {
         return()
     } else {
-        par(mfrow = c(1, 2))
+        par(mfrow = c(1, 2), cex = 1.05)
         plot.MIPCA(x = midata, choice = "ind.supp",
                    graph.type = "classic", new.plot = FALSE)
         plot.MIPCA(x = midata, choice = "var",

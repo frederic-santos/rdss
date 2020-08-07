@@ -316,6 +316,7 @@ dss_server <- function(input, output, session) {
 ###############################
 ### 5. Sensitivity analysis ###
 ###############################
+  ## 5.1. MIPCA plot:
   mipca <- eventReactive(input$button_launch_mi, {
     if (total_perc_missing(current$df) == 0) {
       ## No imputation will be done if the reference dataset
@@ -339,6 +340,18 @@ dss_server <- function(input, output, session) {
   output$plot_mipca <- renderPlot({
     dss_plot_mipca(mipca()$miboot)
   })
+
+  ## Download PCA:
+  output$download_mipca_plot <- downloadHandler(
+    filename = paste("MIPCA_for_", input$select_target_indiv, ".png",
+                     sep = ""),
+    content = function(file) {
+      png(file, width = 900, height = 450)
+      dss_plot_mipca(mipca()$miboot)
+      dev.off()
+    })
+
+  ## 5.2. Sensitivity on DSS results:
   output$table_sensitivity <- DT::renderDataTable({
     DT::datatable(dss_sensitivity(midata = mipca()$mibayes,
                                   conf = as.numeric(input$radio_conf_level),

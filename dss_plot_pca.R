@@ -16,7 +16,7 @@ dss_plot_pca <- function(ref, imputed_ref, target,
     ##############
     ## PCA plot ##
     ##############
-    par(mfrow = c(1, 2), cex = 1.05)
+    par(mfrow = c(1, 2), cex = 1.08)
     res_pca <- FactoMineR::PCA(imp_df, quali.sup = 1, graph = FALSE)
     FactoMineR::plot.PCA(res_pca, habillage = 1, choix = "ind",
                          invisible = "quali",
