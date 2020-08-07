@@ -317,6 +317,7 @@ ui_dss <- dashboardPage(skin = "purple",
                              inputId = "select_method_ML",
                              label = "Method for sex estimation",
                              choices = c("Linear discriminant analysis" = "LDA",
+                                         "Robust linear discriminant analysis" = "robust_LDA",
                                          "Random forest" = "RF"),
                              multiple = FALSE)
                            ),

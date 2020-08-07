@@ -2,7 +2,7 @@ dss_sex_estimation <- function(ref, target, conf = 0.95, method) {
 ### ref : dataframe containing the reference dataset
 ### target: target individual
 ### conf : numeric value in ]0.5, 1[. Threshold pp for sex estimation
-### method: string. "LDA", "RF"
+### method: string. "LDA", "robust_LDA", "RF"
 
     if (is.null(ref)) {
         return()
@@ -35,10 +35,12 @@ dss_sex_estimation <- function(ref, target, conf = 0.95, method) {
     ###############################
     ## 4. Perform sex estimation ##
     ###############################
-    if (method == "LDA") {
+    if (method %in% c("LDA", "robust_LDA")) {
         mod_cv <- MASS::lda(Sex ~ ., data = ref_lm, CV = TRUE,
+                            method = ifelse(method == "LDA", "moment", "t"),
                             prior = c(0.5, 0.5))
         mod_pred <- MASS::lda(Sex ~ ., data = ref_lm,
+                              method = ifelse(method == "LDA", "moment", "t"),
                               prior = c(0.5, 0.5))
         prediction <- predict(mod_pred, newdata = target)$posterior[, "M"]
         cv_results <- dss_loocv(mod = mod_cv, ref = ref_lm, conf = conf,
