@@ -12,6 +12,7 @@ library(visdat)
 library(ggplot2)
 library(MASS)
 library(randomForest)
+library(rrcov)
 
 source("check_data_dss.R")
 source("dss_final_estimate.R")
@@ -349,15 +350,17 @@ ui_dss <- dashboardPage(skin = "purple",
                     column(3,
                            checkboxInput(
                              inputId = "checkbox_pca_names",
-                             label = "Display individuals ID",
+                             label = tags$b("Display individuals ID"),
                              value = FALSE)
                            ),
                     column(9,
-                           checkboxInput(
-                             inputId = "checkbox_pca_ellipses",
+                           selectInput(
+                             inputId = "select_pca_ellipses",
                              label = paste("Display 95% data ellipses for groups",
                                            "(females / males)"),
-                             value = FALSE)
+                             choices = c("None" = "none",
+                                         "Classical 95% data ellipses" = "classical",
+                                         "Robust 95% data ellipses" = "robust"))
                            )
                   ),
                   plotOutput("plot_pca"),

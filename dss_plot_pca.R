@@ -1,10 +1,10 @@
 dss_plot_pca <- function(ref, imputed_ref, target,
-                         ellipses = FALSE, labels = FALSE) {
+                         ellipses = "none", labels = FALSE) {
 ### ref: dataframe, reference dataset (with missing values)
 ### imputed_ref: dataframe, imputed reference dataset
 ### target: 1-row dataframe, target individual
-### ellipses: boolean (only relevant if type = "result")
-### labels: boolean (only relevant if type = "result")
+### ellipses: string, either "none", "classical" or "robust"
+### labels: boolean
 
     if (is.null(imputed_ref)) {
         return()
@@ -32,7 +32,7 @@ dss_plot_pca <- function(ref, imputed_ref, target,
            y = res_pca$ind$coor[1, 2],
            col = "red", pch = 8, cex = 1.8)
     ## Add a 95% data ellipse for each group:
-    if (ellipses == TRUE) {
+    if (ellipses != "none") {
         coor <- res_pca$ind$coor[-1, ]
         sex_ref <- factor(ref[, 1])
         car::dataEllipse(x = coor[, 1], # PC1
@@ -40,6 +40,7 @@ dss_plot_pca <- function(ref, imputed_ref, target,
                          groups = sex_ref,
                          levels = 0.95, # 95% ellipse
                          add = TRUE,
+                         robust = ifelse(ellipses == "robust", TRUE, FALSE),
                          col = c("gray15", "gray70"),
                          center.pch = "", plot.points = FALSE,
                          lwd = 1.1)
