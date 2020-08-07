@@ -102,7 +102,8 @@ dss_server <- function(input, output, session) {
 
   ## Download ref sample:
   output$download_ref_sample <- downloadHandler(
-    filename = paste("ref_data_", input$select_target_indiv, ".csv", sep = ""),
+    filename = paste("ref_data_for_", input$select_target_indiv, ".csv",
+                     sep = ""),
     content = function(file) {
       write.csv(current$df, file)
     })
@@ -187,22 +188,31 @@ dss_server <- function(input, output, session) {
   ## Display pattern of missing values in the reference dataset ##
   ################################################################
   output$plot_md_ref <- renderPlot({
-    if (is.null(target())) {
-      return()
-    } else if (input$radio_md_ref == "pattern") {
-      par(mar = c(1, 1, 1, 1))
-      mice::md.pattern(x = current$df[, -1], # without Sex factor
-                       plot = TRUE)
-    } else if (input$radio_md_ref == "map") {
-      par(mar = c(1, 1, 1, 1), cex = 1.3)
-      mm <- visdat::vis_miss(current$df[, -1]) # without Sex factor
-      mm +
-        theme(legend.text = element_text(size = 12),
-              axis.text.x = element_text(size = 10),
-              axis.text.y = element_text(size = 12),
-              axis.title.y = element_text(size = 12))
-    }
+    dss_plot_md_pattern(ref = current$df,
+                        target = target(),
+                        type = input$radio_md_ref)
   })
+
+  ## Download plot of md pattern:
+  output$download_md_pattern <- downloadHandler(
+    filename = paste("md_pattern_for_", input$select_target_indiv, ".png",
+                     sep = ""),
+    content = function(file) {
+      if (input$radio_md_ref == "pattern") {
+        png(file, width = 900, height = 600)
+        dss_plot_md_pattern(ref = current$df,
+                            target = target(),
+                            type = "pattern")
+        dev.off()
+      } else {
+        ggsave(file,
+               plot = dss_plot_md_pattern(ref = current$df,
+                                          target = target(),
+                                          type = "map"),
+               height = 7, width = 10, units = "in",
+               device = "png")
+      }
+    })
 
   ###################################################################
   ## Reload whole reference sample if `reload' button is triggered ##

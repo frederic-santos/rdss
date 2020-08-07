@@ -19,6 +19,7 @@ source("dss_final_estimate.R")
 source("dss_impute_missing.R")
 source("dss_loocv.R")
 source("dss_min_fm.R")
+source("dss_plot_md_pattern.R")
 source("dss_plot_mipca.R")
 source("dss_plot_pca.R")
 source("dss_sensitivity.R")
@@ -211,7 +212,8 @@ ui_dss <- dashboardPage(skin = "purple",
                   collapsible = TRUE,
                   collapsed = TRUE,
                   DTOutput(outputId = "DT_ref_sample"),
-                  downloadButton("download_ref_sample", "Download (.csv)")
+                  downloadButton(outputId = "download_ref_sample",
+                                 label = "Download reference sample (.csv)")
                   ),
               box(title = "Missing data in the reference dataset",
                   width = 12,
@@ -256,8 +258,10 @@ ui_dss <- dashboardPage(skin = "purple",
                              p("For more information, see the help page of",
                                tags$a(href = "http://visdat.njtierney.com/reference/vis_miss.html",
                                       "visdat::vis_miss()"))
-                             ))
-                  )),
+                           ))),
+                  downloadButton(outputId = "download_md_pattern",
+                                 label = "Download missing data pattern (.png)")
+                  ),
               h3("Subsetting/filtering criteria"),
               fluidRow(
                 box(title = "Percentage of missing data for individuals",
