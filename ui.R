@@ -13,6 +13,7 @@ library(ggplot2)
 library(MASS)
 library(randomForest)
 library(rrcov)
+library(klaR)
 
 source("check_data_dss.R")
 source("dss_final_estimate.R")
@@ -341,6 +342,16 @@ ui_dss <- dashboardPage(skin = "purple",
                                          "Random forests" = "missForest"),
                              inline = TRUE)
                            )
+                  ),
+                  conditionalPanel(
+                    condition = "input.select_method_ML == 'LDA'",
+                    selectInput(inputId = "select_selvar_LDA",
+                                label = "Variable selection",
+                                choices = c("None" = "none",
+                                            "Backward" = "backward",
+                                            "Forward" = "forward",
+                                            "Backward/forward" = "both"),
+                                width = 150)
                   ),
                   actionButton(inputId = "button_start_dss",
                                label = "Launch sex estimation",

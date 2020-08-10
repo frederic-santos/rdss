@@ -1,8 +1,10 @@
-dss_sex_estimation <- function(ref, target, conf = 0.95, method) {
+dss_sex_estimation <- function(ref, target, conf = 0.95, method,
+                               selvar = "none") {
 ### ref : dataframe containing the reference dataset
 ### target: target individual
 ### conf : numeric value in ]0.5, 1[. Threshold pp for sex estimation
 ### method: string. "LDA", "robust_LDA", "RF"
+### selvar: string. "none", backward", "forward"
 
     if (is.null(ref)) {
         return()
@@ -36,6 +38,13 @@ dss_sex_estimation <- function(ref, target, conf = 0.95, method) {
     ## 4. Perform sex estimation ##
     ###############################
     if (method %in% c("LDA", "robust_LDA")) {
+        if (selvar != "none") {
+            best_lda <- klaR::stepclass(Sex ~ ., data = ref_lm,
+                                        method = "lda",
+                                        direction = selvar,
+                                        fold = nrow(ref_lm))
+            ref_lm <- ref_lm[, c("Sex", best_lda$model$name)]
+        }
         mod_cv <- MASS::lda(Sex ~ ., data = ref_lm, CV = TRUE,
                             method = ifelse(method == "LDA", "moment", "t"),
                             prior = c(0.5, 0.5))
@@ -57,7 +66,7 @@ dss_sex_estimation <- function(ref, target, conf = 0.95, method) {
     ## 5. Return results ##
     #######################
     dtf_res["Model", 1] <- paste("Sex ~",
-                                 paste0(colnames(ref_lm[, -1]),
+                                 paste0(colnames(ref_lm)[-1],
                                         collapse = " + "))
     dtf_res["% indeterminate (LOOCV)", 1] <- cv_results$indet_rate
     dtf_res["% accuracy (LOOCV)", 1] <- cv_results$accur_rate
