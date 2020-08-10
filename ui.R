@@ -388,18 +388,20 @@ ui_dss <- dashboardPage(skin = "purple",
                   fluidRow(
                     column(8,
                            tags$b("Results for the target individual"),
-                           tableOutput("table_dss")
+                           tableOutput("table_dss"),
+                           downloadButton(outputId = "download_dss_results",
+                                 label = paste("Download sex estimation",
+                                               "results (.csv)"))
                            ),
                     column(4,
                            tags$b("Confusion matrix for the reference dataset"),
                            tags$b("in LOOCV"),
-                           tableOutput("table_loocv")
+                           tableOutput("table_loocv"),
+                           br(),
+                           tags$b(textOutput("text_details_ML")),
+                           dataTableOutput("table_details_ML")
                            )
-                  ),
-                  downloadButton(outputId = "download_dss_results",
-                                 label = paste("Download sex estimation",
-                                               "results (.csv)"))
-                  )
+                  ))
               ),
 
       ## 2.5. Sensitivity analysis

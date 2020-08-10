@@ -54,12 +54,15 @@ dss_sex_estimation <- function(ref, target, conf = 0.95, method,
         prediction <- predict(mod_pred, newdata = target)$posterior[, "M"]
         cv_results <- dss_loocv(mod = mod_cv, ref = ref_lm, conf = conf,
                                 method = method)
+        details <- coef(mod_pred)
     } else if (method == "RF") {
         mod <- randomForest(Sex ~ ., data = ref_lm,
                             classwt = c(0.5, 0.5))
         prediction <- predict(mod, newdata = target, type = "vote")[, "M"]
         cv_results <- dss_loocv(mod, ref = ref_lm, conf = conf,
                                 method = method)
+        details <- mod$importance[order(mod$importance, decreasing = TRUE), ]
+        details <- data.frame(Score = details)
     }
 
     #######################
@@ -74,5 +77,6 @@ dss_sex_estimation <- function(ref, target, conf = 0.95, method,
     dtf_res["Sex estimate", 1] <- dss_final_estimate(prob_m = prediction,
                                                      conf = conf)
     return(list(res_dss = dtf_res,
-                table_loocv = cv_results$confusion_matrix))
+                table_loocv = cv_results$confusion_matrix,
+                details = details))
 }

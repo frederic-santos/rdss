@@ -327,6 +327,20 @@ dss_server <- function(input, output, session) {
                 file = file)
     })
 
+  ## 4.5. Details about ML method:
+  output$text_details_ML <- renderText({
+    if (input$select_method_ML == "LDA") {
+      "Coefficients of LDA model"
+    } else if (input$select_method_ML == "RF") {
+      "Variable importance in random forest model"
+    }
+  })
+
+  output$table_details_ML <- DT::renderDataTable({
+    DT::datatable(results_dss()$details,
+                  options = list(pageLength = 5))
+  })
+
 ###############################
 ### 5. Sensitivity analysis ###
 ###############################
@@ -371,7 +385,6 @@ dss_server <- function(input, output, session) {
                                   conf = as.numeric(input$radio_conf_level),
                                   refsex = mipca()$refsex),
                   options = list(pageLength = 5))
-    ##DT::datatable(mipca()$mibayes$res.MI[[1]])
   })
 }
 
