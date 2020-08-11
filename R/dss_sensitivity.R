@@ -1,4 +1,5 @@
-dss_sensitivity <- function(midata, conf = 0.95, refsex) {
+dss_sensitivity <-
+function(midata, conf = 0.95, refsex) {
 ### midata: result from missMDA::MIPCA()
 ###         (contains both reference and target indivs)
 ### refsex: a factor, sex of reference individuals

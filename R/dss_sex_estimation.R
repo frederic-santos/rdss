@@ -1,4 +1,5 @@
-dss_sex_estimation <- function(ref, target, conf = 0.95, method,
+dss_sex_estimation <-
+function(ref, target, conf = 0.95, method,
                                selvar = "none") {
 ### ref : dataframe containing the reference dataset
 ### target: target individual

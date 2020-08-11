@@ -1,0 +1,17 @@
+## Exported functions:
+export("start_dss")
+
+## Global import of dependencies:
+import(ggplot2)
+import(shiny)
+import(shinydashboard)
+
+## Soft import of selected functions:
+importFrom("grDevices", "dev.off", "palette", "png")
+importFrom("graphics", "grid", "par", "points")
+importFrom("stats", "aggregate", "coef", "na.omit", "predict")
+importFrom("utils", "read.table", "write.csv")
+importFrom("randomForest", "randomForest")
+importFrom("FactoMineR", "PCA", "plot.PCA")
+importFrom("mice", "md.pattern")
+importFrom("missMDA", "imputePCA", "MIPCA", "plot.MIPCA")

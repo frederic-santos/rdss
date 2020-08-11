@@ -1,4 +1,5 @@
-total_perc_missing <- function(dtf) {
+total_perc_missing <-
+function(dtf) {
     ## First remove sex column:
     dtf <- dtf[, -1]
     ## Then compute % of missing values:

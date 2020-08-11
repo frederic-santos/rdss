@@ -1,34 +1,4 @@
-library(mice)
-library(shiny)
-library(shinydashboard)
-library(DT)
-library(anthrostat)
-library(FactoMineR)
-library(missMDA)
-library(missForest)
-library(car)
-library(Amelia)
-library(visdat)
-library(ggplot2)
-library(MASS)
-library(randomForest)
-library(rrcov)
-library(klaR)
-
-source("check_data_dss.R")
-source("dss_final_estimate.R")
-source("dss_impute_missing.R")
-source("dss_loocv.R")
-source("dss_min_fm.R")
-source("dss_plot_md_pattern.R")
-source("dss_plot_mipca.R")
-source("dss_plot_pca.R")
-source("dss_sensitivity.R")
-source("dss_sex_estimation.R")
-source("total_perc_missing.R")
-source("update_history.R")
-
-ui_dss <- dashboardPage(skin = "purple",
+ui <- dashboardPage(skin = "purple",
   dashboardHeader(title = "Sex estimation",
                   titleWidth = 325),
 
@@ -212,7 +182,7 @@ ui_dss <- dashboardPage(skin = "purple",
                   solidHeader = TRUE,
                   collapsible = TRUE,
                   collapsed = TRUE,
-                  DTOutput(outputId = "DT_ref_sample"),
+                  DT::DTOutput(outputId = "DT_ref_sample"),
                   downloadButton(outputId = "download_ref_sample",
                                  label = "Download reference sample (.csv)")
                   ),
@@ -447,7 +417,7 @@ ui_dss <- dashboardPage(skin = "purple",
                   collapsible = TRUE,
                   collapsed = TRUE,
                   solidHeader = TRUE,
-                  DTOutput("table_sensitivity")
+                  DT::DTOutput("table_sensitivity")
                   )
               ),
 

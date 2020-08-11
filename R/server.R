@@ -1,4 +1,4 @@
-dss_server <- function(input, output, session) {
+server <- function(input, output, session) {
 
   dss_env <- new.env() # app private envirnoment
 
@@ -113,9 +113,9 @@ dss_server <- function(input, output, session) {
   ###################################################################
   observeEvent(input$perc_md_variables, {
     user_choice <- 1 - input$perc_md_variables / 100
-    current$df <- anthrostat::remove_na(current$df,
-                                        which = "var",
-                                        prop_min = user_choice)
+    current$df <- remove_na(current$df,
+                            which = "var",
+                            prop_min = user_choice)
     history$df <- update_history(history$df,
                                  "Maximal %NA allowed for variables",
                                  input$perc_md_variables)
@@ -123,9 +123,9 @@ dss_server <- function(input, output, session) {
 
   observeEvent(input$perc_md_indiv, {
     user_choice <- 1 - input$perc_md_indiv / 100
-    datfiltered <- anthrostat::remove_na(current$df[, -1],
-                                         which = "ind",
-                                         prop_min = user_choice)
+    datfiltered <- remove_na(current$df[, -1],
+                             which = "ind",
+                             prop_min = user_choice)
     datfiltered <- data.frame(current$df[rownames(datfiltered), 1],
                               datfiltered)
     colnames(datfiltered)[1] <- input$name_sex_column

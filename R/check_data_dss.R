@@ -1,8 +1,9 @@
-check_data_dss <- function(file, sex, females, males, tbd) {
+check_data_dss <-
+function(file, sex, females, males, tbd) {
 ### file: dataframe uploaded by the user
-### sex: string, colname for Sex factor in `file'
+### sex: string, colname for Sex factor in 'file'
 ### females, males, tbd: strings, abreviations in Sex factor.
-### Return an error message if `file' is not suitable.
+### Return an error message if 'file' is not suitable.
 ### Otherwise, return `file' with Sex as its 1st column.
 
     if (ncol(file) <= 3) {
@@ -25,9 +26,9 @@ check_data_dss <- function(file, sex, females, males, tbd) {
         ## 3. Check that there is a column for Sex:
         showModal(modalDialog(
             title = "Invalid sex column",
-            paste("There is no column “",
+            paste("There is no column \u201c",
                   sex,
-                  "” in your data file.", sep = ""),
+                  "\u201d in your data file.", sep = ""),
             easyClose = TRUE
         ))
         return()

@@ -1,4 +1,5 @@
-dss_impute_missing <- function(dtf, method = "missMDA") {
+dss_impute_missing <-
+function(dtf, method = "missMDA") {
     if (total_perc_missing(dtf) == 0) {
         return(dtf)
     } else if (method == "missMDA") {

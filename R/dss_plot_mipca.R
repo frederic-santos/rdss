@@ -1,4 +1,5 @@
-dss_plot_mipca <- function(midata) {
+dss_plot_mipca <-
+function(midata) {
 ### midata: object return by MIPCA()
 
     if (is.null(midata)) {

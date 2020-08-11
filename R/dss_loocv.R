@@ -1,4 +1,5 @@
-dss_loocv <- function(mod, ref, conf = 0.95, method) {
+dss_loocv <-
+function(mod, ref, conf = 0.95, method) {
 ### mod : glm model (glm or logistf object)
 ### ref : dataframe. Reference dataset
 ### conf : numeric value. PP threshold for sex estimation
@@ -34,7 +35,7 @@ dss_loocv <- function(mod, ref, conf = 0.95, method) {
     ## Rate of reference indivs remaining indeterminate in LOOCV:
     indet_rate <- sum(tab_cv$Sex_estimate == "I") / nrow(tab_cv)
     ## Rate of reference indivs correctly classified:
-    deter <- subset(tab_cv, Sex_estimate != "I")
+    deter <- tab_cv[tab_cv$Sex_estimate != "I", ]
     accur_rate <- sum(deter[, 2] == deter[, 3]) / nrow(deter)
 
     return(list(indet_rate = round(100 * indet_rate, 1),
