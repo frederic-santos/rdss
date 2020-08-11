@@ -292,7 +292,6 @@ ui <- dashboardPage(skin = "purple",
                              inputId = "select_method_ML",
                              label = "Method for sex estimation",
                              choices = c("Linear discriminant analysis" = "LDA",
-                                         "Robust linear discriminant analysis" = "robust_LDA",
                                          "Random forest" = "RF"),
                              multiple = FALSE)
                            ),
@@ -369,7 +368,7 @@ ui <- dashboardPage(skin = "purple",
                            tableOutput("table_loocv"),
                            br(),
                            tags$b(textOutput("text_details_ML")),
-                           dataTableOutput("table_details_ML")
+                           DT::DTOutput("table_details_ML")
                            )
                   ))
               ),
