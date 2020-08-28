@@ -1,5 +1,8 @@
 # rdss 0.9.1 (Release date: 2020-08-28)
 
+## New features
+- More parameters have been added for tuning random forests.
+
 ## Minor changes
 - UI: large tables (if many variables are used for sex estimation) are now better displayed in the UI.
 - UI: variable names can now be rotated on the `md.pattern()` plot.
