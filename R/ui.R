@@ -1,5 +1,5 @@
 ui <- dashboardPage(skin = "purple",
-  dashboardHeader(title = "Sex estimation",
+  dashboardHeader(title = "rdss: a GUI for sex estimation",
                   titleWidth = 325),
 
   ################
@@ -9,7 +9,7 @@ ui <- dashboardPage(skin = "purple",
     width = 325,
     tags$b("General instructions"),
     p("This user interface aims to facilitate the sex estimation",
-      "for an unknown individual using a reference sample composed",
+      "for an unknown individual, using a reference sample composed",
       "of individuals of known sex."),
     p("To get a sex estimate, simply proceed through the following steps:"),
     sidebarMenu(id = "mainMenu",
