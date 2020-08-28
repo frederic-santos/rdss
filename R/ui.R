@@ -220,7 +220,10 @@ ui <- dashboardPage(skin = "purple",
                                "with each pattern."),
                              p("For more information, see the help page of",
                                tags$a(href = "https://stefvanbuuren.name/mice/reference/md.pattern.html",
-                                      "mice::md.pattern()"))
+                                      "mice::md.pattern()")),
+                             checkboxInput(inputId = "checkbox_rotate_names",
+                                           label = "Rotate variable names on plot",
+                                           value = TRUE)
                            ),
                            conditionalPanel(
                              condition = "input.radio_md_ref == 'map'",

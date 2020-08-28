@@ -190,7 +190,8 @@ server <- function(input, output, session) {
   output$plot_md_ref <- renderPlot({
     dss_plot_md_pattern(ref = current$df,
                         target = target(),
-                        type = input$radio_md_ref)
+                        type = input$radio_md_ref,
+                        rotate = input$checkbox_rotate_names)
   })
 
   ## Download plot of md pattern:
@@ -199,10 +200,11 @@ server <- function(input, output, session) {
                      sep = ""),
     content = function(file) {
       if (input$radio_md_ref == "pattern") {
-        png(file, width = 900, height = 600)
+        png(file, width = 1000, height = 600)
         dss_plot_md_pattern(ref = current$df,
                             target = target(),
-                            type = "pattern")
+                            type = "pattern",
+                            rotate = input$checkbox_rotate_names)
         dev.off()
       } else {
         ggsave(file,
