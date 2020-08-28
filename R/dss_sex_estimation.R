@@ -59,18 +59,32 @@ function(ref, target, conf = 0.95, method,
                                 method = method)
         details <- coef(mod_pred)
     } else if (method == "rf") {
-        ## Random forest:
-        if (!downsampling) {
-            mod <- randomForest(Sex ~ ., data = ref_lm,
-                                ntree = ntrees,
-                                classwt = c(0.5, 0.5))
-        } else {
-            mod <- randomForest(Sex ~ ., data = ref_lm,
-                                ntree = ntrees,
-                                strata = ref_lm$Sex,
-                                sampsize = rep(min(table(ref_lm$Sex)), 2),
-                                classwt = c(0.5, 0.5))
-        }
+        ## Tune random forest (parameter mtry):
+        mtry_grid <- seq(from = 2, to = p, by = 1)
+        errors <- sapply(mtry_grid, function(nbv) {
+            rf <- randomForest(Sex ~ ., data = ref_lm,
+                               ntree = ntrees,
+                               classwt = c(0.5, 0.5),
+                               strata = ifelse(downsampling, ref_lm$Sex, NULL),
+                               sampsize = ifelse(downsampling,
+                                                 rep(min(table(ref_lm$Sex)), 2),
+                                                 nrow(ref_lm)),
+                               mtry = nbv)
+            return(rf$err.rate[rf$ntree, "OOB"])
+        })
+        mtries <- data.frame(mtry = mtry_grid,
+                             error = errors)
+        best_mtry <- mtries[which.min(mtries$error), "mtry"]
+        ## Build random forest with the best mtry parameter:
+        mod <- randomForest(Sex ~ ., data = ref_lm,
+                            ntree = ntrees,
+                            classwt = c(0.5, 0.5),
+                            strata = ifelse(downsampling, ref_lm$Sex, NULL),
+                            sampsize = ifelse(downsampling,
+                                              rep(min(table(ref_lm$Sex)), 2),
+                                              nrow(ref_lm)),
+                            mtry = best_mtry)
+        ## Make predictions and extract results:
         prediction <- predict(mod, newdata = target, type = "vote")[, "M"]
         cv_results <- dss_loocv(mod, ref = ref_lm, conf = conf,
                                 method = method)
