@@ -182,7 +182,7 @@ ui <- dashboardPage(skin = "purple",
                   solidHeader = TRUE,
                   collapsible = TRUE,
                   collapsed = TRUE,
-                  DT::DTOutput(outputId = "DT_ref_sample"),
+                  div(style = "overflow:auto; width:100%;", DT::DTOutput(outputId = "DT_ref_sample")),
                   downloadButton(outputId = "download_ref_sample",
                                  label = "Download reference sample (.csv)")
                   ),
