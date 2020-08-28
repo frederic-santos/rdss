@@ -1,11 +1,13 @@
 dss_sex_estimation <-
 function(ref, target, conf = 0.95, method,
-                               selvar = "none") {
+         selvar = "none", ntrees = 200, downsampling = FALSE) {
 ### ref : dataframe containing the reference dataset
 ### target: target individual
 ### conf : numeric value in ]0.5, 1[. Threshold pp for sex estimation
-### method: string. "LDA", "robust_LDA", "RF"
-### selvar: string. "none", backward", "forward"
+### method: string. "lda", "linda", "rf"
+### selvar: string. For LDA only. One of "none", backward", "forward"
+### ntrees: number of trees in RF, passed to randomForest()
+### downsampling: boolean. Apply downsampling or not in RF
 
     if (is.null(ref)) {
         return()
@@ -38,7 +40,8 @@ function(ref, target, conf = 0.95, method,
     ###############################
     ## 4. Perform sex estimation ##
     ###############################
-    if (method %in% c("LDA", "robust_LDA")) {
+    if (method == "lda") {
+        ## LDA:
         if (selvar != "none") {
             best_lda <- klaR::stepclass(Sex ~ ., data = ref_lm,
                                         method = "lda",
@@ -47,18 +50,26 @@ function(ref, target, conf = 0.95, method,
             ref_lm <- ref_lm[, c("Sex", best_lda$model$name)]
         }
         mod_cv <- MASS::lda(Sex ~ ., data = ref_lm, CV = TRUE,
-                            method = ifelse(method == "LDA", "moment", "t"),
                             prior = c(0.5, 0.5))
         mod_pred <- MASS::lda(Sex ~ ., data = ref_lm,
-                              method = ifelse(method == "LDA", "moment", "t"),
                               prior = c(0.5, 0.5))
         prediction <- predict(mod_pred, newdata = target)$posterior[, "M"]
         cv_results <- dss_loocv(mod = mod_cv, ref = ref_lm, conf = conf,
                                 method = method)
         details <- coef(mod_pred)
-    } else if (method == "RF") {
-        mod <- randomForest(Sex ~ ., data = ref_lm,
-                            classwt = c(0.5, 0.5))
+    } else if (method == "rf") {
+        ## Random forest:
+        if (!downsampling) {
+            mod <- randomForest(Sex ~ ., data = ref_lm,
+                                ntree = ntrees,
+                                classwt = c(0.5, 0.5))
+        } else {
+            mod <- randomForest(Sex ~ ., data = ref_lm,
+                                ntree = ntrees,
+                                strata = ref_lm$Sex,
+                                sampsize = rep(min(table(ref_lm$Sex)), 2),
+                                classwt = c(0.5, 0.5))
+        }
         prediction <- predict(mod, newdata = target, type = "vote")[, "M"]
         cv_results <- dss_loocv(mod, ref = ref_lm, conf = conf,
                                 method = method)

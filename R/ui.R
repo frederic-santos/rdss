@@ -294,8 +294,8 @@ ui <- dashboardPage(skin = "purple",
                            selectInput(
                              inputId = "select_method_ML",
                              label = "Method for sex estimation",
-                             choices = c("Linear discriminant analysis" = "LDA",
-                                         "Random forest" = "RF"),
+                             choices = c("Linear discriminant analysis" = "lda",
+                                         "Random forest" = "rf"),
                              multiple = FALSE)
                            ),
                     column(4,
@@ -316,7 +316,7 @@ ui <- dashboardPage(skin = "purple",
                            )
                   ),
                   conditionalPanel(
-                    condition = "input.select_method_ML == 'LDA'",
+                    condition = "input.select_method_ML == 'lda'",
                     selectInput(inputId = "select_selvar_LDA",
                                 label = "Variable selection",
                                 choices = c("None" = "none",
@@ -324,6 +324,31 @@ ui <- dashboardPage(skin = "purple",
                                             "Forward" = "forward",
                                             "Backward/forward" = "both"),
                                 width = 150)
+                  ),
+                  conditionalPanel(
+                    condition = "input.select_method_ML == 'rf'",
+                    fluidRow(
+                      column(4,
+                             numericInput(inputId = "numeric_ntrees",
+                                          label = "Number of trees",
+                                          value = 500,
+                                          min = 100,
+                                          max = 2000,
+                                          step = 100)
+                             ),
+                      column(4,
+                             checkboxInput(inputId = "checkbox_downsample_rf",
+                                           label = "Downsample the majority class",
+                                           value = FALSE)
+                             ),
+                      column(4,
+                             helpText("Random forests do not work well when",
+                                      "the classes (female / male) are",
+                                      "strongly imbalanced. In this case,",
+                                      "down-sampling the majority class is",
+                                      "a simple workaround.")
+                             )
+                      )
                   ),
                   actionButton(inputId = "button_start_dss",
                                label = "Launch sex estimation",

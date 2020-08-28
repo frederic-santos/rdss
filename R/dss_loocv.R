@@ -3,7 +3,7 @@ function(mod, ref, conf = 0.95, method) {
 ### mod : glm model (glm or logistf object)
 ### ref : dataframe. Reference dataset
 ### conf : numeric value. PP threshold for sex estimation
-### method: string. "LDA", "robust_LDA", "RF"
+### method: string. "lda", "linda", "rf"
 ### output -> vector of length 2: c(%indet, %accuracy).
 
     ##########################################
@@ -17,9 +17,9 @@ function(mod, ref, conf = 0.95, method) {
     #####################################
     ## 2. Extract LOOCV sex estimation ##
     #####################################
-    if (method %in% c("LDA", "robust_LDA")) {
+    if (method %in% c("lda", "linda")) {
         tab_cv[, "ProbM"] <- mod$posterior[, "M"]
-    } else if (method == "RF") {
+    } else if (method == "rf") {
         tab_cv[, "ProbM"] <- mod$votes[, "M"]
     }
     for (i in seq_len(nrow(tab_cv))) {

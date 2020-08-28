@@ -307,7 +307,9 @@ server <- function(input, output, session) {
                        target = target(),
                        conf = as.numeric(input$radio_conf_level),
                        method = input$select_method_ML,
-                       selvar = input$select_selvar_LDA)
+                       selvar = input$select_selvar_LDA,
+                       ntrees = input$numeric_ntrees,
+                       downsampling = input$checkbox_downsample_rf)
   })
   output$table_loocv <- renderTable({
     results_dss()$table_loocv
