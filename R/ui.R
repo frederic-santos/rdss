@@ -166,7 +166,7 @@ ui <- dashboardPage(skin = "purple",
                           choices = c("No data file loaded"),
                           multiple = FALSE),
               h4("Values of the selected individual"),
-              tableOutput(outputId = "target_indiv_values"),
+              div(style = "overflow:auto; width:100%;", tableOutput(outputId = "target_indiv_values")),
               h4("Overview"),
               textOutput(outputId = "text_description_target")
               ),
