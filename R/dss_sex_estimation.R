@@ -19,6 +19,7 @@ function(ref, target, conf = 0.95, method,
     ref_lm <- ref
     colnames(ref_lm)[1] <- "Sex"
     ref_lm$Sex <- factor(ref_lm$Sex)
+    p <- ncol(ref_lm) - 1 # number of covariates
 
     #################################################################
     ## 2. Set up the dataframe in which the results will be stored ##
