@@ -333,9 +333,9 @@ server <- function(input, output, session) {
 
   ## 4.5. Details about ML method:
   output$text_details_ML <- renderText({
-    if (input$select_method_ML == "LDA") {
+    if (input$select_method_ML == "lda") {
       "Coefficients of LDA model"
-    } else if (input$select_method_ML == "RF") {
+    } else if (input$select_method_ML == "rf") {
       "Variable importance in random forest model"
     }
   })
