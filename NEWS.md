@@ -1,3 +1,8 @@
+# rdss 0.9.2 (Release date: 2020-08-31)
+
+## New features
+- Penalized logistic regression (ridge or LASSO) is now available for sex estimation.
+
 # rdss 0.9.1 (Release date: 2020-08-28)
 
 ## New features
