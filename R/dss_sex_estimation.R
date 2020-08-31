@@ -1,13 +1,17 @@
 dss_sex_estimation <-
-function(ref, target, conf = 0.95, method,
-         selvar = "none", ntrees = 200, downsampling = FALSE) {
+function(ref, target, conf = 0.95, method = "lda",
+         lda_selvar = "none",
+         rf_ntrees = 200, rf_downsampling = FALSE,
+         glmnet_type = 0, glmnet_measure = "deviance") {
 ### ref : dataframe containing the reference dataset
 ### target: target individual
 ### conf : numeric value in ]0.5, 1[. Threshold pp for sex estimation
-### method: string. "lda", "linda", "rf"
-### selvar: string. For LDA only. One of "none", backward", "forward"
-### ntrees: number of trees in RF, passed to randomForest()
-### downsampling: boolean. Apply downsampling or not in RF
+### method: string. One of "glmnet", "lda", "linda", "rf"
+### lda_selvar: string. For LDA only. One of "none", backward", "forward"
+### rf_ntrees: number of trees in RF, passed to randomForest()
+### rf_downsampling: boolean. Apply downsampling or not in RF
+### glmnet_type: 0 or 1 for ridge or lasso; passed to glmnet()
+### glmnet_measure: one of "deviance" or "class"; passed to cv.glmnet()
 
     if (is.null(ref)) {
         return()
@@ -42,11 +46,11 @@ function(ref, target, conf = 0.95, method,
     ## 4. Perform sex estimation ##
     ###############################
     if (method == "lda") {
-        ## LDA:
-        if (selvar != "none") {
+        ## 4.1. LDA:
+        if (lda_selvar != "none") {
             best_lda <- klaR::stepclass(Sex ~ ., data = ref_lm,
                                         method = "lda",
-                                        direction = selvar,
+                                        direction = lda_selvar,
                                         fold = nrow(ref_lm))
             ref_lm <- ref_lm[, c("Sex", best_lda$model$name)]
         }
@@ -59,14 +63,14 @@ function(ref, target, conf = 0.95, method,
                                 method = method)
         details <- coef(mod_pred)
     } else if (method == "rf") {
-        ## Tune random forest (parameter mtry):
+        ## 4.2. Tune random forest (parameter mtry):
         mtry_grid <- seq(from = 2, to = p, by = 1)
         errors <- sapply(mtry_grid, function(nbv) {
             rf <- randomForest(Sex ~ ., data = ref_lm,
-                               ntree = ntrees,
+                               ntree = rf_ntrees,
                                classwt = c(0.5, 0.5),
-                               strata = ifelse(downsampling, ref_lm$Sex, NULL),
-                               sampsize = ifelse(downsampling,
+                               strata = ifelse(rf_downsampling, ref_lm$Sex, NULL),
+                               sampsize = ifelse(rf_downsampling,
                                                  rep(min(table(ref_lm$Sex)), 2),
                                                  nrow(ref_lm)),
                                mtry = nbv)
@@ -77,10 +81,10 @@ function(ref, target, conf = 0.95, method,
         best_mtry <- mtries[which.min(mtries$error), "mtry"]
         ## Build random forest with the best mtry parameter:
         mod <- randomForest(Sex ~ ., data = ref_lm,
-                            ntree = ntrees,
+                            ntree = rf_ntrees,
                             classwt = c(0.5, 0.5),
-                            strata = ifelse(downsampling, ref_lm$Sex, NULL),
-                            sampsize = ifelse(downsampling,
+                            strata = ifelse(rf_downsampling, ref_lm$Sex, NULL),
+                            sampsize = ifelse(rf_downsampling,
                                               rep(min(table(ref_lm$Sex)), 2),
                                               nrow(ref_lm)),
                             mtry = best_mtry)
@@ -90,6 +94,9 @@ function(ref, target, conf = 0.95, method,
                                 method = method)
         details <- mod$importance[order(mod$importance, decreasing = TRUE), ]
         details <- data.frame(Score = details)
+    } else if (method == "glmnet") {
+        ## 4.3. Ridge logistic regression
+
     }
 
     #######################
