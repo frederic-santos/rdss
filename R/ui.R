@@ -295,9 +295,10 @@ ui <- dashboardPage(skin = "purple",
                              inputId = "select_method_ML",
                              label = "Statistical method for sex estimation",
                              choices = c("Linear discriminant analysis" = "lda",
+                                         "Penalized logistic regression" = "glmnet",
                                          "Random forest" = "rf",
-                                         "Ridge logistic regression" = "glmnet",
                                          "Robust linear discriminant analysis" = "linda"),
+                             selected = "lda",
                              multiple = FALSE)
                            ),
                     column(4,
@@ -350,6 +351,27 @@ ui <- dashboardPage(skin = "purple",
                                       "down-sampling the majority class is",
                                       "a simple workaround.")
                              )
+                      )
+                  ),
+                  conditionalPanel(
+                    condition = "input.select_method_ML == 'glmnet'",
+                    fluidRow(
+                      column(4,
+                             radioButtons(inputId = "radio_glmnet_type",
+                                          label = "Type of penalized regression",
+                                          choices = c("Lasso" = 1,
+                                                      "Ridge" = 0),
+                                          selected = 0,
+                                          inline = TRUE)
+                             ),
+                      column(4,
+                             radioButtons(inputId = "radio_glmnet_measure",
+                                          label = "Criterion for optimaztion of lambda value",
+                                          choices = c("Deviance" = "deviance",
+                                                      "Misclassification error" = "class"),
+                                          selected = "deviance",
+                                          inline = TRUE)
+                             ),
                       )
                   ),
                   actionButton(inputId = "button_start_dss",
