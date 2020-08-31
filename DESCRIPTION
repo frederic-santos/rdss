@@ -21,6 +21,7 @@ Imports:
     missForest,
     missMDA,
     randomForest,
+    rrcov,
     shiny,
     shinydashboard,
     visdat

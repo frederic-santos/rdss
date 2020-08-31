@@ -2,7 +2,8 @@ dss_sex_estimation <-
 function(ref, target, conf = 0.95, method = "lda",
          lda_selvar = "none",
          rf_ntrees = 200, rf_downsampling = FALSE,
-         glmnet_type = 0, glmnet_measure = "deviance") {
+         glmnet_type = 0, glmnet_measure = "deviance",
+         linda_alpha = 0.9) {
 ### ref : dataframe containing the reference dataset
 ### target: target individual
 ### conf : numeric value in ]0.5, 1[. Threshold pp for sex estimation
@@ -12,6 +13,7 @@ function(ref, target, conf = 0.95, method = "lda",
 ### rf_downsampling: boolean. Apply downsampling or not in RF
 ### glmnet_type: 0 or 1 for ridge or lasso; passed to glmnet()
 ### glmnet_measure: one of "deviance" or "class"; passed to cv.glmnet()
+### linda_alpha: numeric value. alpha parameter passed to rrcov::Linda()
 
     if (is.null(ref)) {
         return()
@@ -120,6 +122,9 @@ function(ref, target, conf = 0.95, method = "lda",
                               type = "response")
         ## Return model coefs:
         details <- as.matrix(coef(glmmod))
+    } else if (method == "linda") {
+        ## 4.4. Robust linear discriminant analysis
+        ## TODO
     }
 
     #######################

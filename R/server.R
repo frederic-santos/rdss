@@ -311,7 +311,8 @@ server <- function(input, output, session) {
                        rf_ntrees = input$numeric_ntrees,
                        rf_downsampling = input$checkbox_downsample_rf,
                        glmnet_type = as.numeric(input$radio_glmnet_type),
-                       glmnet_measure = input$radio_glmnet_measure)
+                       glmnet_measure = input$radio_glmnet_measure,
+                       linda_alpha = input$slider_linda_alpha)
   })
   output$table_loocv <- renderTable({
     results_dss()$table_loocv
@@ -334,7 +335,8 @@ server <- function(input, output, session) {
                                    rf_ntrees = input$numeric_ntrees,
                                    rf_downsampling = input$checkbox_downsample_rf,
                                    glmnet_type = as.numeric(input$radio_glmnet_type),
-                                   glmnet_measure = input$radio_glmnet_measure)$res_dss,
+                                   glmnet_measure = input$radio_glmnet_measure,
+                                   linda_alpha = input$slider_linda_alpha)$res_dss,
                 file = file)
     })
 
