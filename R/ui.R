@@ -371,8 +371,18 @@ ui <- dashboardPage(skin = "purple",
                                                       "Misclassification error" = "class"),
                                           selected = "deviance",
                                           inline = TRUE)
-                             ),
+                             )
                       )
+                  ),
+                  conditionalPanel(
+                    condition = "input.select_method_ML == 'linda'",
+                    sliderInput(inputId = "slider_linda_alpha",
+                                label = "Alpha value for MCD algorithm",
+                                min = 0.5,
+                                max = 0.95,
+                                value = 0.9,
+                                step = 0.01,
+                                width = 250)
                   ),
                   actionButton(inputId = "button_start_dss",
                                label = "Launch sex estimation",
