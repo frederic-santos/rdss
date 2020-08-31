@@ -63,7 +63,8 @@ function(ref, target, conf = 0.95, method = "lda",
                                 method = method)
         details <- coef(mod_pred)
     } else if (method == "rf") {
-        ## 4.2. Tune random forest (parameter mtry):
+        ## 4.2. Random forests
+        ## Tune random forest (parameter mtry):
         mtry_grid <- seq(from = 2, to = p, by = 1)
         errors <- sapply(mtry_grid, function(nbv) {
             rf <- randomForest(Sex ~ ., data = ref_lm,
@@ -95,8 +96,30 @@ function(ref, target, conf = 0.95, method = "lda",
         details <- mod$importance[order(mod$importance, decreasing = TRUE), ]
         details <- data.frame(Score = details)
     } else if (method == "glmnet") {
-        ## 4.3. Ridge logistic regression
-
+        ## 4.3. Penalized logistic regression
+        ## Choose the best lambda value by cross-validation:
+        best_lambda <- glmnet::cv.glmnet(x = as.matrix(ref_lm[, -1]),
+                                         y = ref_lm$Sex,
+                                         family = "binomial",
+                                         alpha = glmnet_type,
+                                         nfolds = nrow(ref_lm),
+                                         type.measure = glmnet_measure)
+        ## Compute the corresponding model:
+        glmmod <- glmnet::glmnet(x = as.matrix(ref_lm[, -1]),
+                                 y = ref_lm$Sex,
+                                 family = "binomial",
+                                 alpha = glmnet_type, # 0 = ridge; 1 = lasso
+                                 lambda = best_lambda$lambda.min)
+        ## Compute the confusion matrix in LOOCV for this lambda value:
+        cv_results <- dss_loocv(glmmod, ref = ref_lm, conf = conf,
+                                method = method,
+                                alpha = glmnet_type,
+                                lambda = best_lambda$lambda.min)
+        ## Make prediction for the target individual:
+        prediction <- predict(glmmod, newx = as.matrix(target[, -1]),
+                              type = "response")
+        ## Return model coefs:
+        details <- as.matrix(coef(glmmod))
     }
 
     #######################

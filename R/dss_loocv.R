@@ -1,9 +1,12 @@
 dss_loocv <-
-function(mod, ref, conf = 0.95, method) {
-### mod : glm model (glm or logistf object)
+    function(mod, ref, conf = 0.95, method = "lda",
+             alpha = NULL, lambda = NULL) {
+### mod : model (glmnet, lda, or randomForest object)
 ### ref : dataframe. Reference dataset
 ### conf : numeric value. PP threshold for sex estimation
-### method: string. "lda", "linda", "rf"
+### method: string. "glmnet", "lda", "linda", "rf"
+### alpha: for method = "glmnet" only; alpha value used.
+### lambda: for method = "glmnet" only; lambda value used.
 ### output -> vector of length 2: c(%indet, %accuracy).
 
     ##########################################
@@ -17,7 +20,20 @@ function(mod, ref, conf = 0.95, method) {
     #####################################
     ## 2. Extract LOOCV sex estimation ##
     #####################################
-    if (method %in% c("lda", "linda")) {
+    if (method == "glmnet") {
+        for (i in seq_len(nrow(ref))) {
+            temp <- ref[-i, ]
+            targ <- ref[i, ]
+            modcv <- glmnet::glmnet(x = as.matrix(temp[, -1]),
+                                    y = temp$Sex,
+                                    family = "binomial",
+                                    alpha = alpha,
+                                    lambda = lambda)
+            tab_cv[i, "ProbM"] <- predict(modcv,
+                                          newx = as.matrix(targ[, -1]),
+                                          type = "response")
+        }
+    } else if (method == "lda") {
         tab_cv[, "ProbM"] <- mod$posterior[, "M"]
     } else if (method == "rf") {
         tab_cv[, "ProbM"] <- mod$votes[, "M"]

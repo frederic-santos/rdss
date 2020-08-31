@@ -310,7 +310,7 @@ server <- function(input, output, session) {
                        lda_selvar = input$select_selvar_LDA,
                        rf_ntrees = input$numeric_ntrees,
                        rf_downsampling = input$checkbox_downsample_rf,
-                       glmnet_type = input$radio_glmnet_type,
+                       glmnet_type = as.numeric(input$radio_glmnet_type),
                        glmnet_measure = input$radio_glmnet_measure)
   })
   output$table_loocv <- renderTable({
@@ -333,7 +333,7 @@ server <- function(input, output, session) {
                                    lda_selvar = input$select_selvar_LDA,
                                    rf_ntrees = input$numeric_ntrees,
                                    rf_downsampling = input$checkbox_downsample_rf,
-                                   glmnet_type = input$radio_glmnet_type,
+                                   glmnet_type = as.numeric(input$radio_glmnet_type),
                                    glmnet_measure = input$radio_glmnet_measure)$res_dss,
                 file = file)
     })
