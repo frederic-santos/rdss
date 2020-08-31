@@ -293,9 +293,11 @@ ui <- dashboardPage(skin = "purple",
                     column(4,
                            selectInput(
                              inputId = "select_method_ML",
-                             label = "Method for sex estimation",
+                             label = "Statistical method for sex estimation",
                              choices = c("Linear discriminant analysis" = "lda",
-                                         "Random forest" = "rf"),
+                                         "Random forest" = "rf",
+                                         "Ridge logistic regression" = "glmnet",
+                                         "Robust linear discriminant analysis" = "linda"),
                              multiple = FALSE)
                            ),
                     column(4,
