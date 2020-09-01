@@ -376,16 +376,29 @@ ui <- dashboardPage(skin = "purple",
                   ),
                   conditionalPanel(
                     condition = "input.select_method_ML == 'linda'",
-                    sliderInput(inputId = "slider_linda_alpha",
-                                label = "Alpha value for MCD algorithm",
-                                min = 0.5,
-                                max = 0.95,
-                                value = 0.9,
-                                step = 0.01,
-                                width = 250)
+                    fluidRow(
+                      column(4,
+                             sliderInput(inputId = "slider_linda_alpha",
+                                         label = "Alpha value for MCD algorithm",
+                                         min = 0.5,
+                                         max = 0.95,
+                                         value = 0.9,
+                                         step = 0.01,
+                                         width = 250)
+                             ),
+                      column(8,
+                             helpText("Please note that the MCD algorithm",
+                                      "requires having n >> p, i.e. the",
+                                      "number of individuals must be much",
+                                      "greater than the number of variables.",
+                                      "In other cases, error messages will",
+                                      "likely be displayed.")
+                             )
+                      )
                   ),
                   actionButton(inputId = "button_start_dss",
-                               label = "Launch sex estimation",
+                               label = paste("Impute missing data and",
+                                             "launch sex estimation"),
                                icon = icon("rocket"))
                   ),
               box(title = "Principal component analysis",
