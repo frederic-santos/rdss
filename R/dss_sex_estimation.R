@@ -49,6 +49,7 @@ function(ref, target, conf = 0.95, method = "lda",
     ###############################
     if (method == "lda") {
         ## 4.1. LDA:
+        ## Perform variable selection if required:
         if (lda_selvar != "none") {
             best_lda <- klaR::stepclass(Sex ~ ., data = ref_lm,
                                         method = "lda",
@@ -56,13 +57,17 @@ function(ref, target, conf = 0.95, method = "lda",
                                         fold = nrow(ref_lm))
             ref_lm <- ref_lm[, c("Sex", best_lda$model$name)]
         }
+        ## Build LDA model:
         mod_cv <- MASS::lda(Sex ~ ., data = ref_lm, CV = TRUE,
                             prior = c(0.5, 0.5))
         mod_pred <- MASS::lda(Sex ~ ., data = ref_lm,
                               prior = c(0.5, 0.5))
+        ## Predict sex of target indiv:
         prediction <- predict(mod_pred, newdata = target)$posterior[, "M"]
+        ## LOOCV results:
         cv_results <- dss_loocv(mod = mod_cv, ref = ref_lm, conf = conf,
-                                method = method)
+                                method = "lda")
+        ## LDA coefs:
         details <- coef(mod_pred)
     } else if (method == "rf") {
         ## 4.2. Random forests
@@ -94,7 +99,7 @@ function(ref, target, conf = 0.95, method = "lda",
         ## Make predictions and extract results:
         prediction <- predict(mod, newdata = target, type = "vote")[, "M"]
         cv_results <- dss_loocv(mod, ref = ref_lm, conf = conf,
-                                method = method)
+                                method = "rf")
         details <- mod$importance[order(mod$importance, decreasing = TRUE), ]
         details <- data.frame(Score = details)
     } else if (method == "glmnet") {
@@ -114,7 +119,7 @@ function(ref, target, conf = 0.95, method = "lda",
                                  lambda = best_lambda$lambda.min)
         ## Compute the confusion matrix in LOOCV for this lambda value:
         cv_results <- dss_loocv(glmmod, ref = ref_lm, conf = conf,
-                                method = method,
+                                method = "glmnet",
                                 alpha = glmnet_type,
                                 lambda = best_lambda$lambda.min)
         ## Make prediction for the target individual:
@@ -124,7 +129,18 @@ function(ref, target, conf = 0.95, method = "lda",
         details <- as.matrix(coef(glmmod))
     } else if (method == "linda") {
         ## 4.4. Robust linear discriminant analysis
-        ## TODO
+        ## Build model:
+        mod <- rrcov::Linda(x = ref_lm[, -1],
+                            grouping = ref_lm$Sex,
+                            prior = c(0.5, 0.5),
+                            alpha = linda_alpha)
+        ## Posterior proba for target individual:
+        prediction <- predict(mod, target)@posterior[1, "M"]
+        ## LDF coefs:
+        details <- mod@ldf
+        ## LOOCV results:
+        cv_results <- dss_loocv(mod, ref = ref_lm, conf = conf,
+                                method = "linda")
     }
 
     #######################

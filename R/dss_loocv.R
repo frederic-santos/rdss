@@ -1,12 +1,13 @@
-dss_loocv <-
-    function(mod, ref, conf = 0.95, method = "lda",
-             alpha = NULL, lambda = NULL) {
+dss_loocv <- function(mod, ref, conf = 0.95, method = "lda",
+                      alpha = NULL, lambda = NULL,
+                      linda_alpha = NULL) {
 ### mod : model (glmnet, lda, or randomForest object)
 ### ref : dataframe. Reference dataset
 ### conf : numeric value. PP threshold for sex estimation
 ### method: string. "glmnet", "lda", "linda", "rf"
 ### alpha: for method = "glmnet" only; alpha value used.
 ### lambda: for method = "glmnet" only; lambda value used.
+### linda_alpha: for method = "linda" only; passed to rrcov::Linda()
 ### output -> vector of length 2: c(%indet, %accuracy).
 
     ##########################################
@@ -20,6 +21,7 @@ dss_loocv <-
     #####################################
     ## 2. Extract LOOCV sex estimation ##
     #####################################
+    ## Perform or extract LOOCV according to "method":
     if (method == "glmnet") {
         for (i in seq_len(nrow(ref))) {
             temp <- ref[-i, ]
@@ -37,7 +39,19 @@ dss_loocv <-
         tab_cv[, "ProbM"] <- mod$posterior[, "M"]
     } else if (method == "rf") {
         tab_cv[, "ProbM"] <- mod$votes[, "M"]
+    } else if (method == "linda") {
+        for (i in seq_len(nrow(ref))) {
+            temp <- ref[-i, ]
+            targ <- ref[i, ]
+            modcv <- rrcov::Linda(x = as.matrix(temp[, -1]),
+                                  grouping = temp$Sex,
+                                  prior = c(0.5, 0.5),
+                                  alpha = linda_alpha)
+            tab_cv[i, "ProbM"] <- predict(modcv, as.matrix(targ[, -1]))@posterior[1, "M"]
+        }
     }
+
+    ## In all cases, compute final sex estimate according to "conf" threshold:
     for (i in seq_len(nrow(tab_cv))) {
         tab_cv[i, "Sex_estimate"] <- dss_final_estimate(tab_cv[i, 1],
                                                         conf = conf)
