@@ -1,3 +1,11 @@
+# rdss 0.9.3 (Release date: 2020-09-01)
+
+## New features
+- Robust linear discriminant analysis is now available for sex estimation.
+
+## Minor changes
+- Small UI adjustments.
+
 # rdss 0.9.2 (Release date: 2020-08-31)
 
 ## New features
