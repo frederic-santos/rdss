@@ -346,7 +346,7 @@ server <- function(input, output, session) {
       "Coefficients of LDA model"
     } else if (input$select_method_ML == "rf") {
       "Variable importance in random forest model"
-    } else if (input$select_method_ML == "lda") {
+    } else if (input$select_method_ML == "linda") {
       "LDF coefficients"
     } else if (input$select_method_ML == "glmnet") {
       "Variable coefficients"

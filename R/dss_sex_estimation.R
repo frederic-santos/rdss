@@ -15,6 +15,7 @@ function(ref, target, conf = 0.95, method = "lda",
 ### glmnet_measure: one of "deviance" or "class"; passed to cv.glmnet()
 ### linda_alpha: numeric value. alpha parameter passed to rrcov::Linda()
 
+    ## Pre-processing:
     if (is.null(ref)) {
         return()
     }
@@ -129,6 +130,7 @@ function(ref, target, conf = 0.95, method = "lda",
         details <- as.matrix(coef(glmmod))
     } else if (method == "linda") {
         ## 4.4. Robust linear discriminant analysis
+        target <- target[, -1] ## Linda doesn't want Sex column for target indiv
         ## Build model:
         mod <- rrcov::Linda(x = ref_lm[, -1],
                             grouping = ref_lm$Sex,
@@ -137,10 +139,11 @@ function(ref, target, conf = 0.95, method = "lda",
         ## Posterior proba for target individual:
         prediction <- predict(mod, target)@posterior[1, "M"]
         ## LDF coefs:
-        details <- mod@ldf
+        details <- t(mod@ldf)
         ## LOOCV results:
         cv_results <- dss_loocv(mod, ref = ref_lm, conf = conf,
-                                method = "linda")
+                                method = "linda",
+                                linda_alpha = linda_alpha)
     }
 
     #######################
