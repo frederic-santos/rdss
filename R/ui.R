@@ -153,7 +153,9 @@ ui <- dashboardPage(skin = "purple",
                               "are also mandatory."),
                       tags$li("Individuals of known sex and individuals of",
                               "unknown sex must be placed in the same file."),
-                      tags$li("An example data file is available here.")
+                      tags$li("An example data file is available",
+                              a("here.", target = "_blank",
+                                href = "https://gitlab.com/f-santos/rdss/-/blob/master/inst/poundbury_with_NA_reduced.csv"))
                       )
                     ))),
 
