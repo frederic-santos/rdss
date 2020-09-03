@@ -7,7 +7,7 @@ Feature requests or bug reports are welcome.
 
 # Installation of the R package `rdss` from GitLab
 
-This R package is still at an realy stage of development, and is not (yet) hosted on CRAN.
+This R package is still at an early stage of development, and is not (yet) hosted on CRAN.
 
 ## Install prerequisites
 
