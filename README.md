@@ -11,7 +11,7 @@ This R package is still at an realy stage of development, and is not (yet) hoste
 
 ## Install prerequisites
 
-Make sure that Git and a recent version of R are installed. Then:
+Make sure that [Git](https://git-scm.com/) and a [recent version of R](https://cran.r-project.org/) are installed. Then:
 
 1. Install the R package `remotes` by typing the following command line into the R console:
 
