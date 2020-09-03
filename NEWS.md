@@ -1,3 +1,9 @@
+# rdss 0.9.4 (Release date: 2020-09-03)
+
+## Minor changes
+- Fixed issue for displaying the results of robust LDA.
+- An example file has been added.
+
 # rdss 0.9.3 (Release date: 2020-09-01)
 
 ## New features
