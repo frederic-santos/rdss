@@ -37,5 +37,5 @@ To start the graphical interface, run the following commands into the R console:
 
 ```r
 library(rdss)
-start_rdss()
+start_dss()
 ```
