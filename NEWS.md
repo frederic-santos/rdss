@@ -1,3 +1,8 @@
+# rdss 0.9.5 (Release date: 2020-09-29)
+
+## Bug fix
+- Fixed issue when submitting filtered datasets to Robust LDA or Penalized regression.
+
 # rdss 0.9.4 (Release date: 2020-09-03)
 
 ## Minor changes
