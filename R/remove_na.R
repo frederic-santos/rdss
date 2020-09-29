@@ -1,3 +1,11 @@
+count_na <- function(x) {
+    return(sum(is.na(x)))
+}
+
+count_nonmissing <- function(x) {
+    return(sum(! is.na(x)))
+}
+
 remove_na <-
 function(data, which = c("ind", "var"),
                       prop_min = NULL, n_min = NULL) {
