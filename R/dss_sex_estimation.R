@@ -27,6 +27,7 @@ function(ref, target, conf = 0.95, method = "lda",
     colnames(ref_lm)[1] <- "Sex"
     ref_lm$Sex <- factor(ref_lm$Sex)
     p <- ncol(ref_lm) - 1 # number of covariates
+    target <- target[, colnames(ref)[-1]]
 
     #################################################################
     ## 2. Set up the dataframe in which the results will be stored ##
@@ -124,13 +125,13 @@ function(ref, target, conf = 0.95, method = "lda",
                                 alpha = glmnet_type,
                                 lambda = best_lambda$lambda.min)
         ## Make prediction for the target individual:
-        prediction <- predict(glmmod, newx = as.matrix(target[, -1]),
+        prediction <- predict(glmmod,
+                              newx = as.matrix(target),
                               type = "response")
         ## Return model coefs:
         details <- as.matrix(coef(glmmod))
     } else if (method == "linda") {
         ## 4.4. Robust linear discriminant analysis
-        target <- target[, -1] ## Linda doesn't want Sex column for target indiv
         ## Build model:
         mod <- rrcov::Linda(x = ref_lm[, -1],
                             grouping = ref_lm$Sex,
