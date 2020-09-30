@@ -1,3 +1,8 @@
+# rdss 0.9.6 (Release date: 2020-09-30)
+
+## Minor changes
+- Improved behavior of some UI widgets.
+
 # rdss 0.9.5 (Release date: 2020-09-29)
 
 ## Bug fix

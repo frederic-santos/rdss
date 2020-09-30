@@ -2,8 +2,8 @@ Package: rdss
 Type: Package
 Title: An R-Shiny Application for a Semi-Automatized Approach of Sex Estimation in Biological Anthropology
 Description: Offers a reactive graphical user interface implementing the approach of sex estimation in past populations by Murail et al. (1999).
-Version: 0.9.5
-Date: 2020-09-29
+Version: 0.9.6
+Date: 2020-09-30
 Authors@R: c(person(given = "Frédéric", family = "Santos",
                     role = c("aut", "cre"), 
                     email = "frederic.santos@u-bordeaux.fr",
