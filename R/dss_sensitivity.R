@@ -22,7 +22,7 @@ function(midata, conf = 0.95, refsex) {
             temp <- dss_sex_estimation(target = midata$res.MI[[k]][1, ],
                                        ref = reftemp,
                                        conf = conf,
-                                       method = "LDA")$res_dss
+                                       method = "lda")$res_dss
             result[k, "Sex estimate"] <- temp["Sex estimate", 1]
             result[k, "Prob(Sex==M)"] <- temp["Prob(Sex==M)", 1]
             result[k, "% indeterminate (LOOCV)"] <- temp["% indeterminate (LOOCV)", 1]
