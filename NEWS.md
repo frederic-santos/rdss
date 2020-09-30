@@ -1,5 +1,8 @@
 # rdss 0.9.6 (Release date: 2020-09-30)
 
+## Bug fix
+- Results of sensitivity analysis are now correctly displayed.
+
 ## Minor changes
 - Improved behavior of some UI widgets.
 
