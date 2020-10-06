@@ -1,3 +1,10 @@
+# rdss 0.9.7 (Release date: 2020-10-06)
+
+## Minor changes
+- Additional tips and help have been added in the last tab of the user interface.
+- A loading screen has been added for the computer-intensive method of missing data imputation.
+- Some very simple unit tests have been added for the most elementary functions.
+
 # rdss 0.9.6 (Release date: 2020-09-30)
 
 ## Bug fix
