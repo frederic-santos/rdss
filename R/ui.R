@@ -500,7 +500,23 @@ ui <- dashboardPage(skin = "purple",
 
       ## 2.6. Help
       tabItem(tabName = "tab_help",
-              h3("Quick help and tips")
+              h3("Quick reference and tips"),
+              tags$ul(
+                     tags$li("A",
+                             a("video tutorial", target = "_blank",
+                               href = ""),
+                             "is available on Vimeo."),
+                     tags$li("See the",
+                             a("seminal paper by Murail et al. (1999)",
+                               target = "_blank",
+                               href = "https://doi.org/10.1002/(SICI)1099-1212(199901/02)9:1%3C39::AID-OA458%3E3.0.CO;2-V"),
+                               "for more theoretical details."),
+                     tags$li("This R package is currently under peer-review."),
+                     tags$li("This R package will be updated on a regurlar basis.",
+                             "To update to the latest development version, run",
+                             code("remotes::install_git('https://gitlab.com/f-santos/rdss.git')"),
+                             "into the R console.")
+                   )
               ))
   ))
 
