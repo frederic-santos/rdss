@@ -65,6 +65,7 @@ ui <- dashboardPage(skin = "purple",
         background: #605ca8;
       }")),
 
+    use_waiter(),
     tabItems(
       ## 2.1. Tab for data import:
       tabItem(tabName = "tab_data",
@@ -482,7 +483,7 @@ ui <- dashboardPage(skin = "purple",
               box(title = "Multiple imputation principal component analysis (MIPCA)",
                   width = 12,
                   collapsible = TRUE,
-                  collapsed = TRUE,
+                  collapsed = FALSE,
                   solidHeader = TRUE,
                   plotOutput("plot_mipca"),
                   downloadButton("download_mipca_plot",
@@ -491,7 +492,7 @@ ui <- dashboardPage(skin = "purple",
               box(title = "Sex estimation results for each imputed dataset",
                   width = 12,
                   collapsible = TRUE,
-                  collapsed = TRUE,
+                  collapsed = FALSE,
                   solidHeader = TRUE,
                   DT::DTOutput("table_sensitivity")
                   )

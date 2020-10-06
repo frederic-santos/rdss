@@ -363,6 +363,8 @@ server <- function(input, output, session) {
 ###############################
   ## 5.1. MIPCA plot:
   mipca <- eventReactive(input$button_launch_mi, {
+    waiter_show(id = "plot_mipca")
+    on.exit(waiter_hide(id = "plot_mipca"))
     if (total_perc_missing(current$df) == 0) {
       ## No imputation will be done if the reference dataset
       ## is already complete.

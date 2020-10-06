@@ -5,6 +5,7 @@ export("start_dss")
 import(ggplot2)
 import(shiny)
 import(shinydashboard)
+import(waiter)
 
 ## Soft import of selected functions:
 importFrom("grDevices", "dev.off", "palette", "png")
