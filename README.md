@@ -15,15 +15,15 @@ This R package is still at an early stage of development, and is not (yet) hoste
 
 ## Install prerequisites
 
-Make sure that [Git](https://git-scm.com/) and a [recent version of R](https://cran.r-project.org/) are installed. Then:
+1. Make sure that [Git](https://git-scm.com/) and a [recent version of R](https://cran.r-project.org/) (newer than 4.0.0) are installed.
 
-1. Install the R package `remotes` by typing the following command line into the R console:
+2. Install the R package `remotes` by typing the following command line into the R console:
 
 ```r
 install.packages("remotes")
 ```
 
-2. Install build environment:
+3. Install build environment:
     * **Windows:** Install latest version of *[Rtools](https://cran.r-project.org/bin/windows/Rtools/)*. During the installation process, make sure to select *"Edit the system path"*.
     * **OSX:** Install *[XCODE](https://developer.apple.com/xcode/)*
 
