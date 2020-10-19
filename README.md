@@ -19,13 +19,14 @@ This R package is still at an early stage of development, and is not (yet) hoste
 
 2. Install the R package `remotes` by typing the following command line into the R console:
 
-```r
-install.packages("remotes")
-```
+   ```r
+   install.packages("remotes")
+   ```
 
 3. Install build environment:
-    * **Windows:** Install latest version of *[Rtools](https://cran.r-project.org/bin/windows/Rtools/)*. During the installation process, make sure to select *"Edit the system path"*.
-    * **OSX:** Install *[XCODE](https://developer.apple.com/xcode/)*
+    * **Linux**: no additional operation required.
+    * **OSX**: install *[XCODE](https://developer.apple.com/xcode/)*.
+    * **Windows**: install the latest version of *[Rtools](https://cran.r-project.org/bin/windows/Rtools/)*. In particular, make sure to follow the steps of the section "Putting Rtools on the PATH" from the help page.
 
 ## Install `rdss`
 
