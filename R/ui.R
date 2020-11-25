@@ -305,12 +305,11 @@ ui <- dashboardPage(skin = "purple",
                              multiple = FALSE)
                            ),
                     column(4,
-                           radioButtons(
-                             inputId = "radio_conf_level",
+                           sliderInput(
+                             inputId = "slider_conf_level",
                              label = "Posterior prob. threshold for sex estimation",
-                             choices = c("50%" = 0.5, "90%" = 0.9, "95%" = 0.95),
-                             inline = TRUE,
-                             selected = 0.95)
+                             value = 0.95,
+                             min = 0.50, max = 0.95, step = 0.05)
                            ),
                     column(4,
                            radioButtons(

@@ -305,7 +305,7 @@ server <- function(input, output, session) {
   results_dss <- reactive({
     dss_sex_estimation(ref = imputed_ref(),
                        target = target(),
-                       conf = as.numeric(input$radio_conf_level),
+                       conf = as.numeric(input$slider_conf_level),
                        method = input$select_method_ML,
                        lda_selvar = input$select_selvar_LDA,
                        rf_ntrees = input$numeric_ntrees,
@@ -392,7 +392,7 @@ server <- function(input, output, session) {
   ## 5.2. Sensitivity on DSS results:
   output$table_sensitivity <- DT::renderDataTable({
     DT::datatable(dss_sensitivity(midata = mipca()$mibayes,
-                                  conf = as.numeric(input$radio_conf_level),
+                                  conf = as.numeric(input$slider_conf_level),
                                   refsex = mipca()$refsex),
                   options = list(pageLength = 5))
   })
