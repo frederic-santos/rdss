@@ -512,7 +512,7 @@ ui <- dashboardPage(skin = "purple",
                                href = "https://doi.org/10.1002/(SICI)1099-1212(199901/02)9:1%3C39::AID-OA458%3E3.0.CO;2-V"),
                                "for more theoretical details."),
                      tags$li("This R package is currently under peer-review."),
-                     tags$li("This R package will be updated on a regurlar basis.",
+                     tags$li("This R package will be updated on a regular basis.",
                              "To update to the latest development version, run",
                              code("remotes::install_git('https://gitlab.com/f-santos/rdss.git')"),
                              "into the R console.")
