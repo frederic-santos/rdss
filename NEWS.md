@@ -1,3 +1,16 @@
+# rdss 1.0.0 (Release date: 2020-12-XX)
+
+This is the first release of `rdss` which may be seen as ready for public use. This version implements the suggestions made by anonymous reviewers of the *International Journal of Osteoarchaeology*, who must be acknowledged for their work.
+
+## Substantial changes
+- New UI layout for tab "3. Check or customize the reference sample".
+- More confidence levels (i.e., classification thresholds) are now allowed in tab "4. Perform sex estimation".
+- Classification accuracy in LOOCV is now also given for females and males separately, in search for potential bias in sex estimation.
+
+## Minor changes
+- Fixed typos in UI.
+- Small code improvements and optimization.
+
 # rdss 0.9.7 (Release date: 2020-10-06)
 
 ## Minor changes
