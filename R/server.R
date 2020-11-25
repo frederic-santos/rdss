@@ -327,16 +327,7 @@ server <- function(input, output, session) {
                      input$select_target_indiv,
                      ".csv", sep = ""),
     content = function(file) {
-      write.csv(dss_sex_estimation(ref = imputed_ref(),
-                                   target = target(),
-                                   conf = as.numeric(input$radio_conf_level),
-                                   method = input$select_method_ML,
-                                   lda_selvar = input$select_selvar_LDA,
-                                   rf_ntrees = input$numeric_ntrees,
-                                   rf_downsampling = input$checkbox_downsample_rf,
-                                   glmnet_type = as.numeric(input$radio_glmnet_type),
-                                   glmnet_measure = input$radio_glmnet_measure,
-                                   linda_alpha = input$slider_linda_alpha)$res_dss,
+      write.csv(results_dss()$res_dss,
                 file = file)
     })
 
