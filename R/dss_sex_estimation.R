@@ -32,11 +32,13 @@ function(ref, target, conf = 0.95, method = "lda",
     #################################################################
     ## 2. Set up the dataframe in which the results will be stored ##
     #################################################################
-    dtf_res <- matrix(NA, nrow = 7, ncol = 1)
+    dtf_res <- matrix(NA, nrow = 9, ncol = 1)
     rownames(dtf_res) <- c("Sex estimate", "Prob(Sex==M)",
                            "Model", "Number of females in ref. sample",
                            "Number of males in ref. sample",
-                           "% indeterminate (LOOCV)", "% accuracy (LOOCV)")
+                           "% indeterminate (LOOCV)", "% accuracy (LOOCV)",
+                           "% accuracy for females (LOOCV)",
+                           "% accuracy for males (LOOCV)")
     colnames(dtf_res) <- rownames(target)
     dtf_res <- as.data.frame(dtf_res)
 
@@ -155,6 +157,8 @@ function(ref, target, conf = 0.95, method = "lda",
                                         collapse = " + "))
     dtf_res["% indeterminate (LOOCV)", 1] <- cv_results$indet_rate
     dtf_res["% accuracy (LOOCV)", 1] <- cv_results$accur_rate
+    dtf_res["% accuracy for females (LOOCV)", 1] <- cv_results$accur_f
+    dtf_res["% accuracy for males (LOOCV)", 1] <- cv_results$accur_m
     dtf_res["Prob(Sex==M)", 1] <- round(prediction, 3)
     dtf_res["Sex estimate", 1] <- dss_final_estimate(prob_m = prediction,
                                                      conf = conf)
