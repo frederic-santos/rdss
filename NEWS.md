@@ -1,6 +1,6 @@
 # rdss 1.0.0 (Release date: 2020-12-XX)
 
-This is the first release of `rdss` which may be seen as ready for public use. This version implements the suggestions made by anonymous reviewers of the *International Journal of Osteoarchaeology*, who must be acknowledged for their work.
+This is the first release of `rdss` which is ready for public use. This version takes into account the suggestions made by anonymous reviewers of the *International Journal of Osteoarchaeology*, who must be acknowledged for their work.
 
 ## Substantial changes
 - New option for the "Import data" step: individuals with all missing values can now be automatically removed.
