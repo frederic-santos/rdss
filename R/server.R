@@ -72,6 +72,20 @@ server <- function(input, output, session) {
                           easyClose = TRUE))
   })
 
+  ## Re-initialize all widgets of 3rd tab when
+  ## changing target individual:
+  observeEvent(input$select_target_indiv, {
+    updateSelectInput(session,
+                      inputId = "perc_md_indiv",
+                      value = 100)
+    updateSelectInput(session,
+                      inputId = "perc_md_variables",
+                      value = 100)
+    updateSelectInput(session,
+                      inputId = "nb_min_indiv",
+                      value = 0)
+  })
+  
   ## Reactive expression for the TBD individual only:
   target <- reactive({
       return(dat()[input$select_target_indiv, ])
