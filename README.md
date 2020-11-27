@@ -7,7 +7,7 @@ Feature requests or bug reports are welcome.
 
 # Video tutorial
 
-A video tutorial, illustrating the main features of `rdss`, is [available on Vimeo](https://vimeo.com/465373176).
+A video tutorial, illustrating the main features of `rdss`, is [available on Vimeo](https://vimeo.com/465373176). This video presents an older version of `rdss` (v0.9.7); some slight changes in the user interface have been made in the newest version.
 
 # Installation of the R package `rdss` from GitLab
 
