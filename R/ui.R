@@ -144,9 +144,16 @@ ui <- dashboardPage(skin = "purple",
                               label = "Select data file",
                               multiple = FALSE,
                               accept = c(".csv", ".txt")),
-                    actionButton(inputId = "button_load_data",
-                                 label = "Load dataset",
-                                 icon = icon("file-upload")),
+                    fluidRow(
+                      column(6,
+                             actionButton(inputId = "button_load_data",
+                                          label = "Load dataset",
+                                          icon = icon("file-upload"))
+                             ),
+                      column(6,
+                             uiOutput(outputId = "button_view_data_file")
+                             )
+                    ),
                     textOutput(outputId = "text_data_ok")
                     ),
                 box(title = "Help & additional instructions",

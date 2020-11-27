@@ -39,6 +39,12 @@ server <- function(input, output, session) {
                           max = slider_max)
         ## store data into the app environment:
         assign("dtf", value = dtf, envir = dss_env)
+        ## Add view button:
+        output$button_view_data_file <- renderUI({
+          actionButton(inputId = "view_data_file",
+                       label = "View data file",
+                       icon = icon("eye"))
+        })
       }
     } else { # the user provided no data file
       showModal(modalDialog(title = "Error",
@@ -57,6 +63,13 @@ server <- function(input, output, session) {
     } else {
       return()
     }
+  })
+
+  ## Action button to view the whole dataset:
+  observeEvent(input$view_data_file, {
+    showModal(modalDialog(title = "View data",
+                          renderDataTable(dat()),
+                          easyClose = TRUE))
   })
 
   ## Reactive expression for the TBD individual only:
