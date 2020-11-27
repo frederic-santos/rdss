@@ -20,7 +20,8 @@ server <- function(input, output, session) {
                             sex = input$name_sex_column,
                             females = input$indic_females,
                             males = input$indic_males,
-                            tbd = input$indic_tbd)
+                            tbd = input$indic_tbd,
+                            rm_empty_rows = input$checkbox_rm_empty_indiv)
       ## If the file is valid:
       if (! is.null(dtf)) {
         ## Extract TBD individuals:

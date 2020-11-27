@@ -1,8 +1,10 @@
 check_data_dss <-
-function(file, sex, females, males, tbd) {
+    function(file, sex, females, males, tbd,
+             rm_empty_rows) {
 ### file: dataframe uploaded by the user
 ### sex: string, colname for Sex factor in 'file'
 ### females, males, tbd: strings, abreviations in Sex factor.
+### rm_empty_rows: boolean. Indicates what to do with empty individuals.
 ### Return an error message if 'file' is not suitable.
 ### Otherwise, return `file' with Sex as its 1st column.
 
@@ -80,6 +82,13 @@ function(file, sex, females, males, tbd) {
         ## Furthermore, standardise factor levels:
         levels(file[, sex])[levels(file[, sex]) == females] <- "F"
         levels(file[, sex])[levels(file[, sex]) == males] <- "M"
+        ## Finally, should individuals with all values missing be removed?
+        if (rm_empty_rows == TRUE) {
+            nb_na <- apply(file, MARGIN = 1, FUN = count_na)
+            discard <- (nb_na >= (ncol(file) - 1))
+            file <- file[!discard, ]
+        }
+        ## Return valid data file:
         return(file)
     }
 }
