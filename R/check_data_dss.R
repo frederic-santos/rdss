@@ -8,8 +8,8 @@ check_data_dss <-
 ### Return an error message if 'file' is not suitable.
 ### Otherwise, return `file' with Sex as its 1st column.
 
-    if (ncol(file) <= 3) {
-        ## 1. Check that there are more than three columns:
+    if (ncol(file) < 3) {
+        ## 1. Check that there are at least three columns:
         showModal(modalDialog(
             title = "Invalid data file",
             "There are not enough columns. Check your field separator.",
