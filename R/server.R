@@ -68,7 +68,8 @@ server <- function(input, output, session) {
   ## Action button to view the whole dataset:
   observeEvent(input$view_data_file, {
     showModal(modalDialog(title = "View data",
-                          renderDataTable(dat()),
+                          div(style = "overflow:auto; width:100%;",
+                              renderDataTable(dat())),
                           easyClose = TRUE))
   })
 
@@ -151,17 +152,19 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE) # ignoreInit is important to avoid a crash here
 
   observeEvent(input$perc_md_indiv, {
-    user_choice <- 1 - input$perc_md_indiv / 100
-    datfiltered <- remove_na(current$df[, -1],
-                             which = "ind",
-                             prop_min = user_choice)
-    datfiltered <- data.frame(current$df[rownames(datfiltered), 1],
-                              datfiltered)
-    colnames(datfiltered)[1] <- input$name_sex_column
-    current$df <- datfiltered
-    history$df <- update_history(history$df,
-                                 "Maximal %NA allowed for individuals",
-                                 input$perc_md_indiv)
+    if (ncol(current$df) > 2) {
+      user_choice <- 1 - input$perc_md_indiv / 100
+      datfiltered <- remove_na(current$df[, -1],
+                               which = "ind",
+                               prop_min = user_choice)
+      datfiltered <- data.frame(current$df[rownames(datfiltered), 1],
+                                datfiltered)
+      colnames(datfiltered)[1] <- input$name_sex_column
+      current$df <- datfiltered
+      history$df <- update_history(history$df,
+                                   "Maximal %NA allowed for individuals",
+                                   input$perc_md_indiv)
+    } ## else, one single predictor: filtering does not make any sense
   }, ignoreInit = TRUE) # ignoreInit is important to avoid a crash here
 
   observeEvent(input$nb_min_indiv, {
@@ -271,6 +274,34 @@ server <- function(input, output, session) {
   )
   output$table_history <- renderTable(history$df,
                                       rownames = 1)
+
+  ################################################################
+  ## Forbid some estimation methods for one-variable dataframes ##
+  ################################################################
+  observeEvent(current$df, {
+    if (ncol(current$df) <= 2) {
+      updateSelectInput(session = session,
+                        inputId = "select_method_ML",
+                        choices = c("Linear discriminant analysis" = "lda"))
+      updateSelectInput(session = session,
+                        inputId = "select_selvar_LDA",
+                        choices = c("None" = "none"))
+    } else {
+      updateSelectInput(session = session,
+                        inputId = "select_method_ML",
+                        choices = c("Linear discriminant analysis" = "lda",
+                                    "Penalized logistic regression" = "glmnet",
+                                    "Random forest" = "rf",
+                                    "Robust linear discriminant analysis" = "linda"),
+                        selected = "lda")
+      updateSelectInput(session = session,
+                        inputId = "select_selvar_LDA",
+                        choices = c("None" = "none",
+                                    "Backward" = "backward",
+                                    "Forward" = "forward",
+                                    "Backward/forward" = "both"))
+      }
+  })
 
 #################################
 ### 4. Perform sex estimation ###
