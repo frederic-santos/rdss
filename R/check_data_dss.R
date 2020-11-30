@@ -75,7 +75,7 @@ check_data_dss <-
         ## The df is valid, thus return it and put Sex in 1st column:
         rownames(file) <- file[, 1]
         file[, 1] <- NULL
-        dat_wt_sex <- file[, colnames(file) != sex]
+        dat_wt_sex <- file[, colnames(file) != sex, drop = FALSE]
         file <- data.frame(Sex = file[, sex],
                            dat_wt_sex)
         colnames(file)[1] <- sex

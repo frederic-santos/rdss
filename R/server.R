@@ -117,7 +117,7 @@ server <- function(input, output, session) {
     row_ref <- rownames(dat())[dat()[, 1] != input$indic_tbd]
     ## (reminder: the 1st column is the Sex factor)
     col_ref <- colnames(dat())[!is.na(target()[1, ])]
-    return(dat()[row_ref, col_ref])
+    return(dat()[row_ref, col_ref, drop = FALSE])
   })
 
   ## Current reference sample
