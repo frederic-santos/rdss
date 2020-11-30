@@ -8,10 +8,9 @@ function(ref, target, type, rotate = TRUE) {
     if (is.null(target)) {
         return()
     } else if (ncol(ref) <= 2) {
-        plot(x = 0, y = 0, pch = "",
-             xlim = c(-5, 5), ylim = c(-5, 5))
-        text(x = 0, y = 0,
-             col = "red",
+        plot(x = 0, y = 0, pch = "", axes = FALSE,
+             xlab = "", ylab = "", xlim = c(-5, 5), ylim = c(-5, 5))
+        text(x = 0, y = 0, axes = FALSE, cex = 1.2, col = "red",
              labels = "Error: At least two metric variables are needed for this plot.")
     } else if (type == "pattern") {
         par(mar = c(1, 1, ifelse(rotate, 0, 1), 1))
