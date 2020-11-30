@@ -85,7 +85,7 @@ server <- function(input, output, session) {
                       inputId = "nb_min_indiv",
                       value = 0)
     history$df <- NULL
-  })
+  }, priority = 5)
 
   ## Reactive expression for the TBD individual only:
   target <- reactive({
