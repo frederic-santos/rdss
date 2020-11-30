@@ -6,7 +6,7 @@ function(ref, target, conf = 0.95, method = "lda",
          linda_alpha = 0.9) {
 ### ref : dataframe containing the reference dataset
 ### target: target individual
-### conf : numeric value in ]0.5, 1[. Threshold pp for sex estimation
+### conf : numeric value in [0.5, 1[. Threshold pp for sex estimation
 ### method: string. One of "glmnet", "lda", "linda", "rf"
 ### lda_selvar: string. For LDA only. One of "none", backward", "forward"
 ### rf_ntrees: number of trees in RF, passed to randomForest()
