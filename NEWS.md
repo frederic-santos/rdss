@@ -7,6 +7,7 @@ This is the first release of `rdss` which is ready for public use. This version 
 - The whole data file can now be viewed in a pop-up just after the importation step.
 - The UI widgets (filtering criteria) now reset to their default values when chosing a new target individual.
 - New UI layout for tab "3. Check or customize the reference sample".
+- The imputed reference dataset can now be downloaded through the user interface.
 - More confidence levels (i.e., classification thresholds) are now allowed in tab "4. Perform sex estimation".
 - Classification accuracy in LOOCV is now also given for females and males separately, in search for potential bias in sex estimation.
 
