@@ -338,6 +338,20 @@ server <- function(input, output, session) {
     dss_impute_missing(current$df, method = input$radio_imputation_method)
   })
 
+  ## bonus: add View button for imputed dataset
+  observeEvent(input$button_start_dss, {
+    output$button_dl_imputed_ref <- renderUI({
+      downloadButton(outputId = "dl_imputed_ref",
+                     label = "Download imputed data (.csv)")
+    })
+  })
+  output$dl_imputed_ref <- downloadHandler(
+    filename = paste("imputed_data_for_", input$select_target_indiv, ".csv",
+                     sep = ""),
+    content = function(file) {
+      write.csv(imputed_ref(), file)
+    })
+
   ## 4.3. PCA:
   output$plot_pca <- renderPlot({
     dss_plot_pca(ref = current$df,

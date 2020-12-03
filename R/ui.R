@@ -413,10 +413,17 @@ ui <- dashboardPage(skin = "purple",
                              )
                       )
                   ),
-                  actionButton(inputId = "button_start_dss",
-                               label = paste("Impute missing data and",
-                                             "launch sex estimation"),
-                               icon = icon("rocket"))
+                  fluidRow(
+                    column(6,
+                           actionButton(inputId = "button_start_dss",
+                                        label = paste("Impute missing data and",
+                                                      "launch sex estimation"),
+                                        icon = icon("rocket"))
+                           ),
+                    column(6,
+                           uiOutput(outputId = "button_dl_imputed_ref")
+                           )
+                  )
                   ),
               box(title = "Principal component analysis",
                   width = 12,
