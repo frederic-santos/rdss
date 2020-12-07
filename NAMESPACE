@@ -9,7 +9,7 @@ import(waiter)
 
 ## Soft import of selected functions:
 importFrom("grDevices", "dev.off", "palette", "png")
-importFrom("graphics", "grid", "par", "points")
+importFrom("graphics", "grid", "par", "points", "text")
 importFrom("stats", "aggregate", "coef", "na.omit", "predict")
 importFrom("utils", "read.table", "write.csv")
 importFrom("randomForest", "randomForest")
