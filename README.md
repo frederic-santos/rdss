@@ -7,7 +7,13 @@ Feature requests or bug reports are welcome.
 
 ![rdss_UI](./inst/rdss_UI.png "An overview of `rdss` user interface")
 
-# Video tutorial
+# Documentation
+
+## Publication
+
+This R package has been extensively described and documented [in an article](https://doi.org/10.1002/oa.2957) published in the *International Journal of Osteoarchaeology*. This article can be seen as the official (and the main) documentation of `rdss`.
+
+## Video tutorial
 
 A video tutorial, illustrating the main features of `rdss`, is [available on Vimeo](https://vimeo.com/465373176). This video presents an older version of `rdss` (v0.9.7); some slight changes in the user interface have been made in the newest version.
 
