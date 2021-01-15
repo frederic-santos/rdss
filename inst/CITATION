@@ -1,0 +1,12 @@
+bibentry(bibtype = "Article",
+         title = "rdss: an R package to facilitate the use of Murail et al.'s (1999) approach of sex estimation in past populations",
+         author = c(person("Frédéric", "Santos")),
+         year = "2021",
+         volume = "n/a",
+         number = "n/a",
+         pages = "n/a",
+         journal = "International Journal of Osteoarchaeology",
+         doi = "10.1002/oa.2957",
+         header = "Please cite rdss in publications using:",
+         textVersion = "Santos, F. (2021). rdss: an R package to facilitate the use of Murail et al.'s (1999) approach of sex estimation in past populations. International Journal of Osteoarchaeology. doi: 10.1002/oa.2957"
+)
