@@ -1,4 +1,14 @@
-# rdss 1.0.0 (Release date: 2020-12-XX)
+# rdss 1.0.2 (under development)
+
+## Minor changes
+- Add a CITATION file.
+- Updated references in documentation files.
+
+# rdss 1.0.1 (Release date: 2021-01-12)
+
+Tiny changes in documentation and UI after acceptance of the associated article by the *International Journal of Osteoarchaeology*.
+
+# rdss 1.0.0 (Release date: 2020-12-07)
 
 This is the first release of `rdss` which is ready for public use. This version takes into account the suggestions made by anonymous reviewers of the *International Journal of Osteoarchaeology*, who must be acknowledged for their work.
 
