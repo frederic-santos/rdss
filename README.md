@@ -17,6 +17,14 @@ This R package has been extensively described and documented [in an article](htt
 
 A video tutorial, illustrating the main features of `rdss`, is [available on Vimeo](https://vimeo.com/465373176). This video presents an older version of `rdss` (v0.9.7); some slight changes in the user interface have been made in the newest version.
 
+## Package vignette
+
+A package vignette is available for those users who would also like to use `rdss` internal functions in R scripts, for performing sex estimation through the command line. The package vignette can be consulted by running the following command into the R console:
+
+```r
+vignette(package = "rdss", topic = "intro_rdss")
+```
+
 # Installation of the R package `rdss` from GitLab
 
 This R package is still at an early stage of development, and is not (yet) hosted on CRAN.
@@ -41,7 +49,7 @@ This R package is still at an early stage of development, and is not (yet) hoste
 Run the following command in R:
 
 ```r
-remotes::install_git('https://gitlab.com/f-santos/rdss.git')
+remotes::install_git('https://gitlab.com/f-santos/rdss.git', build_vignette = TRUE)
 ```
 	
 # Run `rdss`
