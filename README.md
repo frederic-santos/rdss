@@ -52,3 +52,15 @@ To start the graphical interface, run the following commands into the R console:
 library(rdss)
 start_dss()
 ```
+
+# Citing `rdss` in a scientific article
+
+Citation info can be found by executing the following instruction into the R console:
+
+```r
+citation("rdss")
+```
+
+# License
+
+`rdss` is available under a [CeCILL 2.1 free software license](http://cecill.info/licences/Licence_CeCILL_V2.1-en.html).
