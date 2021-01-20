@@ -28,6 +28,8 @@ Imports:
     waiter
 Suggests: 
     covr,
+    knitr,
+    rmarkdown,
     testthat
 License: CeCILL-2 | file LICENSE
 Encoding: UTF-8
