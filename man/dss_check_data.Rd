@@ -15,8 +15,10 @@ dss_check_data(dtf, sex, females, males,
 }
 \arguments{
   \item{dtf}{
-    previously imported dataframe. Warning: this dataframe must
-    \bold{not} have row names (see Notes below).
+    previously imported dataframe. Warning: at this stage, individual
+    IDs \bold{must} be indicated as a character vector in the first
+    column of the dataframe, and not directly as custom row names (see
+    Notes below, see also the package vignette).
   }
   \item{sex}{
     character string; name of the column filled with the sex of
@@ -72,5 +74,6 @@ dss_check_data(dtf, sex, females, males,
   \code{row.names = 1} from \code{read.csv()}, for instance. Instead,
   its first column must be a character vector filled with individual
   IDs. This character vector will be transformed as row names (after
-  several checks) by this function.
+  several checks) by this function. See the package vignette for
+  additional details.
 }
