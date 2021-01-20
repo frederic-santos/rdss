@@ -128,6 +128,8 @@ dss_plot_md_pattern(ref = ref,
                     type = "map")     # also try with type = "pattern"
 ```
 
+Note that this corresponds to Fig. 2 in @santos2021_RdssPackageFacilitate.
+
 ### Data subsetting and filtering
 Thanks to this map, one can remove manually and explicitly the variables and individuals having too many missing values. Another way is to use quality criteria, e.g.:
 1. "Keep only those variables having less than 50% of missing values" (here, this will only remove `LRML`, which seems to be reasonable)
@@ -153,5 +155,10 @@ dss_plot_md_pattern(ref = ref,
                     type = "map")     # also try with type = "pattern"
 ```
 
+Note that this corresponds to Fig. 3 in @santos2021_RdssPackageFacilitate.
+
+## Equivalent for fourth tab in UI: perform sex estimation
+### Principal component analysis on the reference dataset
+### Build a decision rule for sex estimation and assess its accuracy
 
 # References
