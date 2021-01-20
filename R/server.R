@@ -16,7 +16,7 @@ server <- function(input, output, session) {
                         na.strings = input$text_NA,
                         stringsAsFactors = TRUE)
       ## Check whether the file is valid:
-      dtf <- dss_check_data(file = dtf,
+      dtf <- dss_check_data(dtf = dtf,
                             sex = input$name_sex_column,
                             females = input$indic_females,
                             males = input$indic_males,
