@@ -1,6 +1,7 @@
 ## Exported functions:
 export("dss_check_data")
 export("dss_plot_md_pattern")
+export("remove_na")
 export("start_dss")
 
 ## Global import of dependencies:
