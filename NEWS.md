@@ -1,4 +1,8 @@
-# rdss 1.0.2 (under development)
+# rdss 1.1.0 (under development)
+
+## Major changes
+- Most of the internal functions are now exported, which means that `rdss` can now be used through R scripts.
+- A package vignette has been added to document the use of `rdss` through the command line.
 
 ## Minor changes
 - Add a CITATION file.
