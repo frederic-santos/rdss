@@ -119,4 +119,39 @@ summary(ref)
 
 ## Equivalent for third tab in UI: customize the reference sample
 
+### Visualization of missing data pattern
+A map of missingness can easily be obtained for the reference sample:
+```{r}
+### Missingness map for the original reference sample:
+dss_plot_md_pattern(ref = ref,
+                    target = target,
+                    type = "map")     # also try with type = "pattern"
+```
+
+### Data subsetting and filtering
+Thanks to this map, one can remove manually and explicitly the variables and individuals having too many missing values. Another way is to use quality criteria, e.g.:
+1. "Keep only those variables having less than 50% of missing values" (here, this will only remove `LRML`, which seems to be reasonable)
+2. Then, in the remanining data, "keep only those individuals with less than 50% of missing values" (here, this will only remove two individuals).
+
+This can be done by using, for instance:
+```{r}
+### Keep only well-preserved individuals and variables:
+ref %<>% remove_na(which = "var",
+                   prop_min = 0.5) %>%
+    remove_na(which = "ind",
+              prop_min = 0.5)
+summary(ref)
+```
+
+Note that this kind of filtering criteria are not commutative, generally speaking.
+
+The filtered reference dataset has now a much better map of missingness, while still having enough individuals and variables:
+```{r}
+### Missingness map for the filtered reference sample:
+dss_plot_md_pattern(ref = ref,
+                    target = target,
+                    type = "map")     # also try with type = "pattern"
+```
+
+
 # References
