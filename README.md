@@ -51,6 +51,12 @@ Run the following command in R:
 ```r
 remotes::install_git('https://gitlab.com/f-santos/rdss.git', build_vignette = TRUE)
 ```
+
+In you go through an error or want a lighter install because you will not use `rdss` through the command line interface, you can alternatively run:
+
+```r
+remotes::install_git('https://gitlab.com/f-santos/rdss.git', build_vignette = FALSE)
+```
 	
 # Run `rdss`
 
