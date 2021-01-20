@@ -32,3 +32,4 @@ Suggests:
 License: CeCILL-2 | file LICENSE
 Encoding: UTF-8
 URL: https://gitlab.com/f-santos/rdss/
+VignetteBuilder: knitr
