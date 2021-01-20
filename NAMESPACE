@@ -1,4 +1,5 @@
 ## Exported functions:
+export("dss_check_data")
 export("start_dss")
 
 ## Global import of dependencies:
