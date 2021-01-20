@@ -1,5 +1,5 @@
 dss_plot_md_pattern <-
-function(ref, target, type, rotate = TRUE) {
+function(ref, target, type = "map", rotate = TRUE) {
 ### ref: dataframe, reference dataset
 ### target: 1-row dataframe, reference individual
 ### type: string, either "pattern" or "map"
