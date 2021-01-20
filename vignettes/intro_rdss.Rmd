@@ -1,0 +1,102 @@
+---
+title: "An overview of rdss"
+author: "Frédéric Santos, <frederic.santos[at]u-bordeaux.fr>"
+output: 
+  rmarkdown::html_vignette:
+    number_sections: true
+    toc: true
+    fig_width: 5
+    fig_height: 5
+vignette: >
+  %\VignetteIndexEntry{An overview of rdss}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: biblio.bib
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(digits = 3)
+```
+
+```{r include=FALSE}
+library(rdss)
+```
+
+# Introduction
+
+## Scope and ressources
+`rdss` is an R package, and mainly an R-shiny application, for making sex estimation in past populations somewhat easier. The global approach follows the philosophy of "diagnose sexuelle secondaire" (*secondary sex estimation*), described by @murail1999_NewApproachSexual.
+
+`rdss` has been peer-reviewed and is extensively described in an article published in the *International Journal of Osteoarchaeology* [@santos2021_RdssPackageFacilitate]. This article can be seen as the official and the main documentation for the package. The present *vignette* only gives some additional details for use through R scripts.
+
+Also, a video tutorial for the R-shiny application [is available on Vimeo](https://vimeo.com/465373176).
+
+## Graphical user interface vs. use in R scripts
+
+`rdss` was primarily designed as an R-Shiny application. As such, the target audience mainly consists in researchers and students in archaeology or biological anthropology who are *not* R programmers. With `rdss`, all steps of secondary sex estimation can be made interactively through a graphical user interface: this is what the package was designed for. 
+
+Secondary sex estimation is just a combination of some cumbersome data manipulation steps (subsetting, filtering, discarding or imputing missing values, etc.) with usual and simple supervised learning algorithms (LDA, random forests, logistic regression, etc.). As such, all those operations can easily be made without `rdss` through R scripts... as long as the user is familiar with R programming!
+
+As explicitly stated in the article, I feel that those users who are familiar with R programming won't need the graphical user interface, and probably won't need `rdss` at all, since performing secondary sex estimation with base R functions is not especially long nor difficult. However, for the sake of transparency and reproducibility of the analyses, starting with version 1.1.0, `rdss` exports its main functions, so that they can also be used through the command line. It will also make it easier to share your analyses with your colleagues or your supervisor, or to include them as supporting information in an article.
+
+Note that, at least as a first step, I still recommend to stick with the graphical user interface if you are not a programmer. Secondary sex estimation will often require several empirical trials before finding the best settings, and the R-shiny application is ideal for that.
+
+# Using `rdss` through the R-shiny application
+
+Simply run the following instructions in the R console:
+
+```r
+library(rdss)
+start_dss()
+```
+
+# Using `rdss` from the command line
+
+@santos2021_RdssPackageFacilitate presented a short toy example of secondary sex estimation of a given individual, based on real archaeological data extracted from the Goldman Data Set online [@auerbach_GoldmanOsteometricData]. The R code below will allow for the replication of the main results (figures and tables) presented in this article.
+
+For the sake of code readability, we'll use the pipes provided by `magrittr` below:
+
+```{r}
+library(magrittr)
+```
+
+## Data formatting
+
+Let's start with the [CSV file used in the seminal article](https://gitlab.com/f-santos/rdss/-/raw/master/inst/poundbury_with_NA_reduced.csv) [@santos2021_RdssPackageFacilitate]. This data file must include both the individuals of known sex, and the target individuals. It can be imported with the usual `read.csv()` function.
+
+**Important note**: please do *not* use the argument `row.names` when reading your data file. The individual IDs must be present in your data file, but at this stage, they must be read as an ordinary column, not as row names.
+
+```{r}
+### Load your data file:
+dat <- read.csv("https://gitlab.com/f-santos/rdss/-/raw/master/inst/poundbury_with_NA_reduced.csv",
+                header = TRUE,
+                sep = ",",
+                dec = ".",
+                stringsAsFactors = TRUE,
+                na.strings = "nil",
+                fileEncoding = "utf-8")
+```
+
+Now let's display a quick summary for this file:
+```{r}
+summary(dat)
+```
+
+`rdss` offers a bunch of checks for possible formatting errors in your dataframe, which might prevent the subsequent analyses to run normally. As a consequence, a mandatory first step consists in running those checks on your dataframe with the function `dss_check_data()`. If some formatting errors are found, explicit error messages are displayed, with useful indications on how to solve them. Also, as a side effect, `dss_check_data()` returns your original dataframe, with possibly some slight changes in column names and factor levels for the sake of standardization (see its help page).
+
+```{r}
+### Perform some checks on the dataframe:
+dat <- dss_check_data(dtf = dat,
+                      sex = "Sex",
+                      females = "F",
+                      males = "M",
+                      tbd = "TBD")
+summary(dat)
+```
+
+
+# References
