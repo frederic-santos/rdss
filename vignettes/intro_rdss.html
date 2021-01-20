@@ -166,7 +166,9 @@ div.csl-indent {
 <li><a href="#using-rdss-through-the-r-shiny-application"><span class="toc-section-number">2</span> Using <code>rdss</code> through the R-shiny application</a></li>
 <li><a href="#using-rdss-from-the-command-line"><span class="toc-section-number">3</span> Using <code>rdss</code> from the command line</a>
 <ul>
-<li><a href="#data-formatting"><span class="toc-section-number">3.1</span> Data formatting</a></li>
+<li><a href="#equivalent-for-first-tab-in-ui-load-data"><span class="toc-section-number">3.1</span> Equivalent for first tab in UI: load data</a></li>
+<li><a href="#equivalent-for-second-tab-in-ui-select-the-target-individual"><span class="toc-section-number">3.2</span> Equivalent for second tab in UI: select the target individual</a></li>
+<li><a href="#equivalent-for-third-tab-in-ui-customize-the-reference-sample"><span class="toc-section-number">3.3</span> Equivalent for third tab in UI: customize the reference sample</a></li>
 </ul></li>
 <li><a href="#references">References</a></li>
 </ul>
@@ -198,9 +200,10 @@ div.csl-indent {
 <h1 number="3"><span class="header-section-number">3</span> Using <code>rdss</code> from the command line</h1>
 <p><span class="citation">Santos (2021)</span> presented a short toy example of secondary sex estimation of a given individual, based on real archaeological data extracted from the Goldman Data Set online <span class="citation">(Auerbach, n.d.)</span>. The R code below will allow for the replication of the main results (figures and tables) presented in this article.</p>
 <p>For the sake of code readability, we’ll use the pipes provided by <code>magrittr</code> below:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span></code></pre></div>
-<div id="data-formatting" class="section level2" number="3.1">
-<h2 number="3.1"><span class="header-section-number">3.1</span> Data formatting</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span></code></pre></div>
+<div id="equivalent-for-first-tab-in-ui-load-data" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Equivalent for first tab in UI: load data</h2>
 <p>Let’s start with the <a href="https://gitlab.com/f-santos/rdss/-/raw/master/inst/poundbury_with_NA_reduced.csv">CSV file used in the seminal article</a> <span class="citation">(Santos 2021)</span>. This data file must include both the individuals of known sex, and the target individuals. It can be imported with the usual <code>read.csv()</code> function.</p>
 <p><strong>Important note</strong>: please do <em>not</em> use the argument <code>row.names</code> when reading your data file. The individual IDs must be present in your data file, but at this stage, they must be read as an ordinary column, not as row names.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Load your data file:</span></span>
@@ -237,6 +240,65 @@ div.csl-indent {
 <span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3rd Qu.:22.7  </span></span>
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Max.   :27.4  </span></span>
 <span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  NA&#39;s   :4</span></span></code></pre></div>
+<p><code>rdss</code> offers a bunch of checks for possible formatting errors in your dataframe, which might prevent the subsequent analyses to run normally. As a consequence, a mandatory first step consists in running those checks on your dataframe with the function <code>dss_check_data()</code>. If some formatting errors are found, explicit error messages are displayed, with useful indications on how to solve them. Also, as a side effect, <code>dss_check_data()</code> returns your original dataframe, with possibly some slight changes in column names and factor levels for the sake of standardization (see its help page). Also, the first column is now converted as row names, if it is found to be convenient for that purpose.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Perform some checks on the dataframe:</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">dss_check_data</span>(<span class="at">dtf =</span> dat,     <span class="co"># name of imported dataframe</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sex =</span> <span class="st">&quot;Sex&quot;</span>,   <span class="co"># name of column for sex info in dat</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">females =</span> <span class="st">&quot;F&quot;</span>, <span class="co"># abbreviation for female indivs in dat</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">males =</span> <span class="st">&quot;M&quot;</span>,   <span class="co"># abbreviation for male indivs in dat</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">tbd =</span> <span class="st">&quot;TBD&quot;</span>)   <span class="co"># abbreviation for target indivs in dat</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dat)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Sex          LHML         LHMLD           LHHD     </span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  F  :22   Min.   :267   Min.   :14.0   Min.   :36.5  </span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  M  :20   1st Qu.:286   1st Qu.:17.9   1st Qu.:39.8  </span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  </span><span class="al">TBD</span><span class="co">: 6   Median :301   Median :20.2   Median :41.9  </span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;           Mean   :304   Mean   :20.1   Mean   :43.9  </span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;           3rd Qu.:325   3rd Qu.:22.6   3rd Qu.:48.0  </span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;           Max.   :347   Max.   :25.1   Max.   :53.9  </span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;           NA&#39;s   :2     NA&#39;s   :6      NA&#39;s   :5     </span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       LRML          LFML          LTML         LTMLD     </span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Min.   :202   Min.   :373   Min.   :304   Min.   :16.7  </span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1st Qu.:209   1st Qu.:408   1st Qu.:327   1st Qu.:19.2  </span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Median :226   Median :423   Median :339   Median :21.0  </span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Mean   :227   Mean   :428   Mean   :348   Mean   :21.1  </span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3rd Qu.:239   3rd Qu.:452   3rd Qu.:370   3rd Qu.:22.7  </span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Max.   :258   Max.   :495   Max.   :410   Max.   :27.4  </span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  NA&#39;s   :24    NA&#39;s   :3     NA&#39;s   :3     NA&#39;s   :4</span></span></code></pre></div>
+<p>Since no error was displayed here, you are now ready for the next step.</p>
+</div>
+<div id="equivalent-for-second-tab-in-ui-select-the-target-individual" class="section level2" number="3.2">
+<h2 number="3.2"><span class="header-section-number">3.2</span> Equivalent for second tab in UI: select the target individual</h2>
+<p>You can first select (manually) your target individual for the subsequent steps. For instance, let’s say that our target individual will be the individual whose name is <code>Indet_1</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Select the target individual:</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>target <span class="ot">&lt;-</span> dat[<span class="st">&quot;Indet_1&quot;</span>, ]</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(target)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         Sex LHML LHMLD LHHD LRML LFML LTML LTMLD</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Indet_1 </span><span class="al">TBD</span><span class="co">  304  22.1 39.8  211  423  338  22.5</span></span></code></pre></div>
+<p>The <em>reference dataset</em> is composed of the individual of known sex. Although this is not the case here, the target individual you selected may have missing values. The variables corresponding to those potentially missing values, by definition, are useless for all subsequent steps, and should be removed from the reference dataset.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Define reference dataset:</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>ref <span class="ot">&lt;-</span> <span class="fu">subset</span>(dat, Sex <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">droplevels</span>() <span class="sc">%&gt;%</span>           <span class="co"># remove unused factor levels</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select_if</span>(<span class="sc">!</span> <span class="fu">is.na</span>(target)) <span class="co"># keep only non-missing variables on target indiv</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ref)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sex         LHML         LHMLD           LHHD     </span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  F:22   Min.   :267   Min.   :14.0   Min.   :36.5  </span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  M:20   1st Qu.:286   1st Qu.:17.8   1st Qu.:39.9  </span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         Median :298   Median :20.2   Median :42.0  </span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         Mean   :303   Mean   :20.0   Mean   :43.9  </span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         3rd Qu.:322   3rd Qu.:22.4   3rd Qu.:48.0  </span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         Max.   :344   Max.   :25.1   Max.   :51.6  </span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         NA&#39;s   :2     NA&#39;s   :6      NA&#39;s   :4     </span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       LRML          LFML          LTML         LTMLD     </span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Min.   :202   Min.   :373   Min.   :305   Min.   :16.7  </span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1st Qu.:210   1st Qu.:408   1st Qu.:327   1st Qu.:18.9  </span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Median :228   Median :420   Median :340   Median :20.9  </span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Mean   :226   Mean   :428   Mean   :348   Mean   :21.1  </span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3rd Qu.:238   3rd Qu.:452   3rd Qu.:367   3rd Qu.:22.7  </span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Max.   :255   Max.   :495   Max.   :410   Max.   :27.4  </span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  NA&#39;s   :23    NA&#39;s   :3     NA&#39;s   :2     NA&#39;s   :4</span></span></code></pre></div>
+</div>
+<div id="equivalent-for-third-tab-in-ui-customize-the-reference-sample" class="section level2" number="3.3">
+<h2 number="3.3"><span class="header-section-number">3.3</span> Equivalent for third tab in UI: customize the reference sample</h2>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">

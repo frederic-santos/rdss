@@ -60,11 +60,12 @@ start_dss()
 
 For the sake of code readability, we'll use the pipes provided by `magrittr` below:
 
-```{r}
+```{r message=FALSE}
+library(dplyr)
 library(magrittr)
 ```
 
-## Data formatting
+## Equivalent for first tab in UI: load data
 
 Let's start with the [CSV file used in the seminal article](https://gitlab.com/f-santos/rdss/-/raw/master/inst/poundbury_with_NA_reduced.csv) [@santos2021_RdssPackageFacilitate]. This data file must include both the individuals of known sex, and the target individuals. It can be imported with the usual `read.csv()` function.
 
@@ -86,17 +87,36 @@ Now let's display a quick summary for this file:
 summary(dat)
 ```
 
-`rdss` offers a bunch of checks for possible formatting errors in your dataframe, which might prevent the subsequent analyses to run normally. As a consequence, a mandatory first step consists in running those checks on your dataframe with the function `dss_check_data()`. If some formatting errors are found, explicit error messages are displayed, with useful indications on how to solve them. Also, as a side effect, `dss_check_data()` returns your original dataframe, with possibly some slight changes in column names and factor levels for the sake of standardization (see its help page).
+`rdss` offers a bunch of checks for possible formatting errors in your dataframe, which might prevent the subsequent analyses to run normally. As a consequence, a mandatory first step consists in running those checks on your dataframe with the function `dss_check_data()`. If some formatting errors are found, explicit error messages are displayed, with useful indications on how to solve them. Also, as a side effect, `dss_check_data()` returns your original dataframe, with possibly some slight changes in column names and factor levels for the sake of standardization (see its help page). Also, the first column is now converted as row names, if it is found to be convenient for that purpose.
 
 ```{r}
 ### Perform some checks on the dataframe:
-dat <- dss_check_data(dtf = dat,
-                      sex = "Sex",
-                      females = "F",
-                      males = "M",
-                      tbd = "TBD")
+dat <- dss_check_data(dtf = dat,     # name of imported dataframe
+                      sex = "Sex",   # name of column for sex info in dat
+                      females = "F", # abbreviation for female indivs in dat
+                      males = "M",   # abbreviation for male indivs in dat
+                      tbd = "TBD")   # abbreviation for target indivs in dat
 summary(dat)
 ```
+Since no error was displayed here, you are now ready for the next step.
 
+## Equivalent for second tab in UI: select the target individual
+
+You can first select (manually) your target individual for the subsequent steps. For instance, let's say that our target individual will be the individual whose name is `Indet_1`:
+```{r}
+### Select the target individual:
+target <- dat["Indet_1", ]
+print(target)
+```
+The *reference dataset* is composed of the individual of known sex. Although this is not the case here, the target individual you selected may have missing values. The variables corresponding to those potentially missing values, by definition, are useless for all subsequent steps, and should be removed from the reference dataset.
+```{r}
+### Define reference dataset:
+ref <- subset(dat, Sex %in% c("F", "M")) %>%
+  droplevels() %>%           # remove unused factor levels
+  select_if(! is.na(target)) # keep only non-missing variables on target indiv
+summary(ref)
+```
+
+## Equivalent for third tab in UI: customize the reference sample
 
 # References
