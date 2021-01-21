@@ -7,11 +7,10 @@ All contributions are welcome and encouraged.
 ## Fixing typos
 
 The easiest way to contribute consists in fixing typos or grammatical errors in documentation files (and there might be quite a lot of them, since they are written by a non-native English speaker!).
-Fixes can be made through the GitLab web interface directly in the `.Rd` files (`rdss` does not use `roxygen` and no documentation is included in the source files).
 
 ## Pull requets
 
-More substantial changes can be made through pull requests.
+All changes can be made through pull requests.
 
 ### Prerequisites
 
