@@ -172,6 +172,42 @@ summary(imputed)
 ```
 
 ### Principal component analysis on the reference dataset
+A principal component analysis can then be easily computed and displayed using the wrapper `dss_plot_pca()`. Classical or robust confidence ellipses can be added on the plot.
+
+```{r fig.width=10, fig.height=5}
+### Perform a principal component analysis:
+dss_plot_pca(ref = ref,
+             imputed_ref = imputed,
+             target = target,
+             ellipses = "robust",
+             labels = FALSE)
+```
+Note that this is exactly Fig. 4 in @santos2021_RdssPackageFacilitate.
+
 ### Build a decision rule for sex estimation and assess its accuracy
+Finally, the main function, `dss_sex_estimation`, builds a decision rule for sex estimation on the reference sample, evaluates this decision rule in leave-one-out cross-validation on this sample, and then applies this rule on the target individual.
+
+```{r}
+### Perform sex estimation:
+res <- dss_sex_estimation(ref = imputed,   # imputed reference dataset
+                          target = target, # target individual
+                          conf = 0.95,     # post. prob. threshold for sex estimation
+                          method = "linda") # use robust LDA
+```
+
+The classification results can then be displayed individually:
+```{r}
+### Confusion matrix in LOOCV on the reference dataset:
+res$table_loocv
+```
+```{r}
+### Model coefficients:
+res$details
+```
+```{r}
+### Results for the target individual:
+res$res_dss
+```
+Note that those results correspond to Fig. 5 in @santos2021_RdssPackageFacilitate.
 
 # References
