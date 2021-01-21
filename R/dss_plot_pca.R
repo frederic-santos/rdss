@@ -1,15 +1,18 @@
 dss_plot_pca <-
 function(ref, imputed_ref, target,
-                         ellipses = "none", labels = FALSE) {
+         ellipses = c("none", "classical", "robust"),
+         labels = FALSE) {
 ### ref: dataframe, reference dataset (with missing values)
 ### imputed_ref: dataframe, imputed reference dataset
 ### target: 1-row dataframe, target individual
 ### ellipses: string, either "none", "classical" or "robust"
 ### labels: boolean
 
+    ## Check input args:
     if (is.null(imputed_ref)) {
         return()
     }
+    ellipses <- match.arg(ellipses)
 
     ## Refactor some details in reference and target data:
     imp_df <- merge_target_ref(target, imputed_ref)
