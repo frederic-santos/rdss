@@ -58,7 +58,7 @@ dss_sex_estimation(ref, target, conf = 0.95,
 }
   \item{linda_alpha}{
     numeric value. Only parsed if \code{method = "linda"}. Passed to
-    \code{\link[rrcov]{Lina}} as the `alpha` argument.
+    \code{\link[rrcov]{Linda}} as the `alpha` argument.
   }
 }
 \details{
