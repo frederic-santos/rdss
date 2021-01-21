@@ -22,8 +22,9 @@ dss_plot_md_pattern(ref, target, type = "map", rotate = TRUE)
   \item{type}{
     character string; either \code{"map"} or \code{"pattern"}. Type of
     visualization for missing data pattern. \code{map} uses
-    \code{\link[visdat]{vis_miss}}, whereas \code{pattern} uses
-    \code{\link[mice]{md.pattern}}.
+    \code{\link[visdat]{vis_miss}} from \code{visdat} package, whereas
+    \code{pattern} uses \code{\link[mice]{md.pattern}} from \code{mice}
+    package.
   }
   \item{rotate}{
     boolean. Should variable names be rotated on the plot to improve
