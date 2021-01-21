@@ -15,7 +15,7 @@ dss_impute_missing(dtf, method = "missMDA")
   \item{dtf}{
     dataframe of reference individuals, typically as returned by
     \code{\link{dss_check_data}}.
-}
+  }
   \item{method}{
     character string, either "missMDA" or "missForest". Uses the
     corresponding R package to perform missing data imputation.
@@ -23,11 +23,11 @@ dss_impute_missing(dtf, method = "missMDA")
 }
 \details{
   If \code{method = "missMDA"}, the function
-  \code{\link{[missMDA]{imputePCA}} from package `missMDA` is used for
+  \code{\link{[missMDA]{imputePCA}}} from package `missMDA` is used for
     missing data imputation. If \code{method = "missForest"}, the
-    function \code{\link{[missForest]}} from package `missForest` is
-    used. See their respective documentation for more theoretical and
-    practical details.
+    function \code{\link{[missForest]{missForest}}} from package
+    `missForest` is used. See their respective documentation for more
+    theoretical and practical details.
 }
 \value{
   a dataframe, which is the imputed version of the input dataframe
@@ -37,5 +37,5 @@ dss_impute_missing(dtf, method = "missMDA")
   Frédéric Santos.
 }
 \seealso{
-  \code{\link{[missMDA]{imputePCA}}, \code{\link{[missForest]}}
+  \code{\link{[missMDA]{imputePCA}}}, \code{\link{[missForest]{missForest}}}
 }
