@@ -1,9 +1,10 @@
-dss_sex_estimation <-
-function(ref, target, conf = 0.95, method = "lda",
-         lda_selvar = "none",
-         rf_ntrees = 200, rf_downsampling = FALSE,
-         glmnet_type = 0, glmnet_measure = "deviance",
-         linda_alpha = 0.9) {
+dss_sex_estimation <- function(ref, target, conf = 0.95,
+                               method = c("lda", "glmnet", "linda", "rf"),
+                               lda_selvar = c("none", "backward", "forward"),
+                               rf_ntrees = 200, rf_downsampling = FALSE,
+                               glmnet_type = 0,
+                               glmnet_measure = c("deviance", "class"),
+                               linda_alpha = 0.9) {
 ### ref : dataframe containing the reference dataset
 ### target: target individual
 ### conf : numeric value in [0.5, 1[. Threshold pp for sex estimation
@@ -15,10 +16,13 @@ function(ref, target, conf = 0.95, method = "lda",
 ### glmnet_measure: one of "deviance" or "class"; passed to cv.glmnet()
 ### linda_alpha: numeric value. alpha parameter passed to rrcov::Linda()
 
-    ## Pre-processing:
+    ## Pre-process and check args:
     if (is.null(ref)) {
         return()
     }
+    method <- match.arg(method)
+    lda_selvar <- match.arg(lda_selvar)
+    glmnet_measure <- match.arg(glmnet_measure)
 
     ##################################
     ## 1. Prepare reference dataset ##

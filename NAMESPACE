@@ -3,6 +3,7 @@ export("dss_check_data")
 export("dss_impute_missing")
 export("dss_plot_md_pattern")
 export("dss_plot_pca")
+export("dss_sex_estimation")
 export("remove_na")
 export("start_dss")
 
