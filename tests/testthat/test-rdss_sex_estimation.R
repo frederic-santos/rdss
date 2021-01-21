@@ -12,7 +12,7 @@ dat <- dss_check_data(dtf = poundbury,
 target <- dat["Indet_1", ]
 ref <- subset(dat, Sex %in% c("F", "M")) %>%
   droplevels() %>%           # remove unused factor levels
-    select_if(! is.na(target)) # keep only non-missing variables on target indiv
+    dplyr::select_if(! is.na(target)) # keep only non-missing variables on target indiv
 ref %<>% remove_na(which = "var",
                    prop_min = 0.5) %>%
     remove_na(which = "ind",
