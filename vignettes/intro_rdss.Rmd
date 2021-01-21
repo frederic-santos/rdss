@@ -31,9 +31,9 @@ library(rdss)
 ## Scope and ressources
 `rdss` is an R package, and mainly an R-shiny application, for making sex estimation in past populations somewhat easier. The global approach follows the philosophy of "diagnose sexuelle secondaire" (*secondary sex estimation*), described by @murail1999_NewApproachSexual.
 
-`rdss` has been peer-reviewed and is extensively described in an article published in the *International Journal of Osteoarchaeology* [@santos2021_RdssPackageFacilitate]. This article can be seen as the official and the main documentation for the package. The present *vignette* only gives some additional details for use through R scripts.
+`rdss` has been peer-reviewed and is extensively described in an article published in the *International Journal of Osteoarchaeology* [@santos2021_RdssPackageFacilitate]. This article can be seen as the official and the main documentation for the package. Also, a video tutorial for the R-shiny application [is available on Vimeo](https://vimeo.com/465373176).
 
-Also, a video tutorial for the R-shiny application [is available on Vimeo](https://vimeo.com/465373176).
+The present *vignette* only gives some additional details for using `rdss` through R scripts rather than the graphical user interface, and it is assumed that the reader has already gone through the IJOA article or the video tutorial.
 
 ## Graphical user interface vs. use in R scripts
 
@@ -43,7 +43,7 @@ Secondary sex estimation is just a combination of some cumbersome data manipulat
 
 As explicitly stated in the article, I feel that those users who are familiar with R programming won't need the graphical user interface, and probably won't need `rdss` at all, since performing secondary sex estimation with base R functions is not especially long nor difficult. However, for the sake of transparency and reproducibility of the analyses, starting with version 1.1.0, `rdss` exports its main functions, so that they can also be used through the command line. It will also make it easier to share your analyses with your colleagues or your supervisor, or to include them as supporting information in an article.
 
-Note that, at least as a first step, I still recommend to stick with the graphical user interface if you are not a programmer. Secondary sex estimation will often require several empirical trials before finding the best settings, and the R-shiny application is ideal for that.
+Note that, at least as a first step, I still recommend to stick with the graphical user interface. Secondary sex estimation will often require several empirical trials before finding the best settings, and the R-shiny application is ideal for that.
 
 # Using `rdss` through the R-shiny application
 
@@ -53,6 +53,8 @@ Simply run the following instructions in the R console:
 library(rdss)
 start_dss()
 ```
+
+See the video tutorial or the seminal article [@santos2021_RdssPackageFacilitate] for full details about `rdss` and secondary sex estimation.
 
 # Using `rdss` from the command line
 
@@ -155,7 +157,7 @@ dss_plot_md_pattern(ref = ref,
                     type = "map")     # also try with type = "pattern"
 ```
 
-Note that this corresponds to Fig. 3 in @santos2021_RdssPackageFacilitate.
+Note that this corresponds to Fig. 3 in @santos2021_RdssPackageFacilitate. Also, those missingness maps (when `type = "map"`) are produced using the R function `visdat::vis_miss()`, which relies of `ggplot2`. Such maps can then be further customized using the usual `ggplot2` syntax.
 
 ## Equivalent for fourth tab in UI: perform sex estimation
 ### Principal component analysis on the reference dataset
