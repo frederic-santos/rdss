@@ -23,9 +23,9 @@ dss_impute_missing(dtf, method = "missMDA")
 }
 \details{
   If \code{method = "missMDA"}, the function
-  \code{\link{[missMDA]{imputePCA}}} from package `missMDA` is used for
+  \code{\link[missMDA]{imputePCA}} from package `missMDA` is used for
     missing data imputation. If \code{method = "missForest"}, the
-    function \code{\link{[missForest]{missForest}}} from package
+    function \code{\link[missForest]{missForest}} from package
     `missForest` is used. See their respective documentation for more
     theoretical and practical details.
 }
@@ -37,5 +37,5 @@ dss_impute_missing(dtf, method = "missMDA")
   Frédéric Santos.
 }
 \seealso{
-  \code{\link{[missMDA]{imputePCA}}}, \code{\link{[missForest]{missForest}}}
+  \code{\link[missMDA]{imputePCA}}, \code{\link[missForest]{missForest}}
 }
