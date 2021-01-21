@@ -160,6 +160,17 @@ dss_plot_md_pattern(ref = ref,
 Note that this corresponds to Fig. 3 in @santos2021_RdssPackageFacilitate. Also, those missingness maps (when `type = "map"`) are produced using the R function `visdat::vis_miss()`, which relies of `ggplot2`. Such maps can then be further customized using the usual `ggplot2` syntax.
 
 ## Equivalent for fourth tab in UI: perform sex estimation
+### Impute missing values in the reference dataset
+First, the remaining missing values in the reference dataset must be imputed. By default, an EM-type algorithm by @josse2016_MissMDAPackageHandling is used.
+
+Note: please do not erase the original reference dataset, since you will have to use it in subsequent steps. Create a new R object instead.
+
+```{r}
+### Impute missing values in the reference dataset:
+imputed <- dss_impute_missing(dtf = ref, method = "missMDA")
+summary(imputed)
+```
+
 ### Principal component analysis on the reference dataset
 ### Build a decision rule for sex estimation and assess its accuracy
 
