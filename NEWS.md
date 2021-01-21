@@ -1,8 +1,9 @@
-# rdss 1.1.0 (under development)
+# rdss 1.1.0 (Release date: 2021-01-21)
 
 ## Major changes
 - Most of the internal functions are now exported, which means that `rdss` can now be used through R scripts.
 - A package vignette has been added to document the use of `rdss` through the command line.
+- An example data object (`poundbury`) has been included.
 
 ## Minor changes
 - Add a CITATION file.
