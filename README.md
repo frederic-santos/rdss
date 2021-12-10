@@ -7,17 +7,17 @@ Feature requests or bug reports are welcome.
 
 ![rdss_UI](./inst/rdss_UI.png "An overview of `rdss` user interface")
 
-# Documentation
+## Documentation
 
-## Publication
+### Publication
 
 This R package has been extensively described and documented [in an article](https://doi.org/10.1002/oa.2957) published in the *International Journal of Osteoarchaeology*. This article can be seen as the official (and the main) documentation of `rdss`.
 
-## Video tutorial
+### Video tutorial
 
 A video tutorial, illustrating the main features of `rdss`, is [available on Vimeo](https://vimeo.com/465373176). This video presents an older version of `rdss` (v0.9.7); some slight changes in the user interface have been made in the newest version.
 
-## Package vignette
+### Package vignette
 
 A package vignette is available for those users who would also like to use `rdss` internal functions in R scripts, for performing sex estimation through the command line. The package vignette can be consulted by running the following command into the R console:
 
@@ -25,11 +25,11 @@ A package vignette is available for those users who would also like to use `rdss
 vignette(package = "rdss", topic = "intro_rdss")
 ```
 
-# Installation of the R package `rdss` from GitLab
+## Installation of the R package `rdss` from GitLab
 
 This R package is still at an early stage of development, and is not (yet) hosted on CRAN.
 
-## Install prerequisites
+### Install prerequisites
 
 1. Make sure that [Git](https://git-scm.com/) and a [recent version of R](https://cran.r-project.org/) (newer than 4.0.0) are installed.
 
@@ -44,7 +44,7 @@ This R package is still at an early stage of development, and is not (yet) hoste
     * **OSX**: install *[XCODE](https://developer.apple.com/xcode/)*.
     * **Windows**: install the latest version of *[Rtools](https://cran.r-project.org/bin/windows/Rtools/)*. In particular, make sure to follow the steps of the section "Putting Rtools on the PATH" from the help page.
 
-## Install `rdss`
+### Install `rdss`
 
 Run the following command in R:
 
@@ -52,13 +52,13 @@ Run the following command in R:
 remotes::install_git('https://gitlab.com/f-santos/rdss.git', build_vignette = TRUE)
 ```
 
-In you go through an error or want a lighter install because you will not use `rdss` through the command line interface, you can alternatively run:
+If you go through an error or want a lighter install because you will not use `rdss` through the command line interface, you can alternatively run:
 
 ```r
 remotes::install_git('https://gitlab.com/f-santos/rdss.git', build_vignette = FALSE)
 ```
 	
-# Run `rdss`
+## Run `rdss`
 
 To start the graphical interface, run the following commands into the R console:
 
@@ -67,7 +67,7 @@ library(rdss)
 start_dss()
 ```
 
-# Citing `rdss` in a scientific article
+## Citing `rdss` in a scientific article
 
 Citation info can be found by executing the following instruction into the R console:
 
@@ -75,6 +75,6 @@ Citation info can be found by executing the following instruction into the R con
 citation("rdss")
 ```
 
-# License
+## License
 
 `rdss` is available under a [CeCILL 2.1 free software license](http://cecill.info/licences/Licence_CeCILL_V2.1-en.html).
