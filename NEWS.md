@@ -1,3 +1,8 @@
+# rdss 1.1.1 (Release date: 2023-03-09)
+
+## Minor changes
+- A warning has been added to explicitly warn the userwhen LDA assumptions might not be met.
+
 # rdss 1.1.0 (Release date: 2021-01-21)
 
 ## Major changes
