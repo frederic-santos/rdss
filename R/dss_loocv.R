@@ -37,6 +37,10 @@ dss_loocv <- function(mod, ref, conf = 0.95, method = "lda",
         }
     } else if (method == "lda") {
         tab_cv[, "ProbM"] <- mod$posterior[, "M"]
+        ## Add an additional check for possible problems due to intercorrelation:
+        if (any(is.nan(tab_cv[, "ProbM"]))) {
+            warning("LDA results in LOOCV resulted in unstable sex estimation: LDA assumptions might not be met in your dataset. Please check for outliers and homogeneity of variances; or use another algorithm for sex estimation.")
+        }
     } else if (method == "rf") {
         tab_cv[, "ProbM"] <- mod$votes[, "M"]
     } else if (method == "linda") {
