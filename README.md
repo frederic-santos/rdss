@@ -27,7 +27,7 @@ vignette(package = "rdss", topic = "intro_rdss")
 
 ## Installation of the R package `rdss` from GitLab
 
-This R package is still at an early stage of development, and is not (yet) hosted on CRAN.
+This R package is not (yet) hosted on CRAN.
 
 ### Install prerequisites
 
@@ -42,7 +42,7 @@ This R package is still at an early stage of development, and is not (yet) hoste
 3. Install build environment:
     * **Linux**: no additional operation required.
     * **OSX**: install *[XCODE](https://developer.apple.com/xcode/)*.
-    * **Windows**: install the latest version of *[Rtools](https://cran.r-project.org/bin/windows/Rtools/)*. In particular, make sure to follow the steps of the section "Putting Rtools on the PATH" from the help page.
+    * **Windows**: install the latest version of *[Rtools](https://cran.r-project.org/bin/windows/Rtools/)*.
 
 ### Install `rdss`
 
