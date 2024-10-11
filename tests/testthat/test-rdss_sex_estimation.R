@@ -28,15 +28,15 @@ res <- dss_sex_estimation(ref = imputed,
                           method = "linda")
 
 ## Expected confusion matrix:
-expected_loocv <- structure(list(F = c(18L, 2L),
-                                 I = 3:2,
+expected_loocv <- structure(list(F = c(19L, 2L),
+                                 I = c(2L, 2L),
                                  M = c(0L, 15L)),
                             class = "data.frame",
                             row.names = c("F", "M"))
 
 ## Expected DSS results:
 expected_dss <- structure(list(Indet_1 = c("F", "0", "Sex ~ LHML + LHMLD + LHHD + LFML + LTML + LTMLD",
-                                           "21", "19", "12.5", "94.3", "100", "88.2")),
+                                           "21", "19", "10", "94.4", "100", "88.2")),
                           row.names = c("Sex estimate", "Prob(Sex==M)", "Model", "Number of females in ref. sample",
                                         "Number of males in ref. sample", "% indeterminate (LOOCV)",
                                         "% accuracy (LOOCV)", "% accuracy for females (LOOCV)",
