@@ -1,6 +1,6 @@
 dss_sex_estimation <- function(ref, target, conf = 0.95,
                                method = c("lda", "glmnet", "linda", "rf"),
-                               lda_selvar = c("none", "backward", "forward"),
+                               lda_selvar = c("none", "backward", "forward", "both"),
                                rf_ntrees = 200, rf_downsampling = FALSE,
                                glmnet_type = 0,
                                glmnet_measure = c("deviance", "class"),
@@ -9,7 +9,7 @@ dss_sex_estimation <- function(ref, target, conf = 0.95,
 ### target: target individual
 ### conf : numeric value in [0.5, 1[. Threshold pp for sex estimation
 ### method: string. One of "glmnet", "lda", "linda", "rf"
-### lda_selvar: string. For LDA only. One of "none", backward", "forward"
+### lda_selvar: string. For LDA only. One of "none", backward", "forward", "both".
 ### rf_ntrees: number of trees in RF, passed to randomForest()
 ### rf_downsampling: boolean. Apply downsampling or not in RF
 ### glmnet_type: 0 or 1 for ridge or lasso; passed to glmnet()

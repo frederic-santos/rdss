@@ -11,7 +11,7 @@
 \usage{
 dss_sex_estimation(ref, target, conf = 0.95,
                    method = c("lda", "glmnet", "linda", "rf"),
-                   lda_selvar = c("none", "backward", "forward"),
+                   lda_selvar = c("none", "backward", "forward", "both"),
                    rf_ntrees = 200, rf_downsampling = FALSE,
                    glmnet_type = 0,
                    glmnet_measure = c("deviance", "class"),
@@ -35,7 +35,8 @@ dss_sex_estimation(ref, target, conf = 0.95,
 }
   \item{lda_selvar}{
     character string. Only parsed if \code{method = "lda"}. Method of
-    variable selection to be used in LDA model.
+    variable selection to be used in LDA model, as detailed in
+    \code{klaR::stepclass()}.
   }
   \item{rf_ntrees}{
     numeric value. Only parsed if \code{method = "rf"}. Number of trees
