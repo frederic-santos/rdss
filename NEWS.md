@@ -1,3 +1,13 @@
+# rdss 1.1.2 (Release date: 2024-10-11)
+
+## Minor user-visible changes
+- Fixed bug in UI for "Backward/forward" method of variable selection in LDA.
+
+## Other minor changes under the hood
+- All occurrences of deprecated function `shiny::renderDataTable()` have been updated to `DT::renderDT()`.
+- A portion of code that might produce UI glitches and/or messages in the R console have been removed.
+- Updated unit test for sex estimation.
+
 # rdss 1.1.1 (Release date: 2023-03-09)
 
 ## Minor changes
