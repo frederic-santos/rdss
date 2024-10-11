@@ -306,16 +306,8 @@ server <- function(input, output, session) {
 #################################
 ### 4. Perform sex estimation ###
 #################################
-  ## 4.1. Update UI elements:
-  observe({
-    updateSliderInput(session = session,
-                      inputId = "slider_nb_max_variables",
-                      max = ncol(current$df) - 1,
-                      value = ncol(current$df) - 1,
-                      step = 1)
-  })
 
-  ## 4.2. Impute missing data:
+  ## 4.1. Impute missing data:
   imputed_ref <- eventReactive(input$button_start_dss, {
     perc_na <- total_perc_missing(current$df)
     if (perc_na >= 50) {
@@ -352,7 +344,7 @@ server <- function(input, output, session) {
       write.csv(imputed_ref(), file)
     })
 
-  ## 4.3. PCA:
+  ## 4.2. PCA:
   output$plot_pca <- renderPlot({
     dss_plot_pca(ref = current$df,
                  imputed_ref = imputed_ref(),
@@ -375,7 +367,7 @@ server <- function(input, output, session) {
       dev.off()
     })
 
-  ## 4.4. DSS:
+  ## 4.3. DSS:
   results_dss <- reactive({
     dss_sex_estimation(ref = imputed_ref(),
                        target = target(),
@@ -405,7 +397,7 @@ server <- function(input, output, session) {
                 file = file)
     })
 
-  ## 4.5. Details about ML method:
+  ## 4.4. Details about ML method:
   output$text_details_ML <- renderText({
     if (input$select_method_ML == "lda") {
       "Coefficients of LDA model"
