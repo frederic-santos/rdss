@@ -69,7 +69,7 @@ server <- function(input, output, session) {
   observeEvent(input$view_data_file, {
     showModal(modalDialog(title = "View data",
                           div(style = "overflow:auto; width:100%;",
-                              renderDataTable(dat())),
+                              DT::renderDT(dat())),
                           easyClose = TRUE))
   })
 
@@ -181,7 +181,7 @@ server <- function(input, output, session) {
   #############################################
   ## Display reference sample in a DataTable ##
   #############################################
-  output$DT_ref_sample <- DT::renderDataTable(
+  output$DT_ref_sample <- DT::renderDT(
     DT::datatable(current$df, options = list(pageLength = 5))
     )
 
@@ -418,7 +418,7 @@ server <- function(input, output, session) {
     }
   })
 
-  output$table_details_ML <- DT::renderDataTable({
+  output$table_details_ML <- DT::renderDT({
     DT::datatable(results_dss()$details,
                   options = list(pageLength = 5))
   })
@@ -464,7 +464,7 @@ server <- function(input, output, session) {
     })
 
   ## 5.2. Sensitivity on DSS results:
-  output$table_sensitivity <- DT::renderDataTable({
+  output$table_sensitivity <- DT::renderDT({
     DT::datatable(dss_sensitivity(midata = mipca()$mibayes,
                                   conf = as.numeric(input$slider_conf_level),
                                   refsex = mipca()$refsex),
