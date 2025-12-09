@@ -1,4 +1,5 @@
 ^\.gitlab-ci\.yml$
+^AUTHORS
 ^CONTRIBUTING\.md
 ^LICENCE
 ^codemeta\.json$
